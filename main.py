@@ -1,41 +1,29 @@
-import discord, os, requests, json, random
+import discord, os
+from discord.ext import commands
+from keep_alive import keep_alive
+import extra
+bot = commands.Bot(command_prefix="$")
 
-client = discord.Client()
+@bot.event
+async def on_ready():  # Console connect report
+	print("Login as {0.user} in ".format(bot) + str(len(bot.guilds)) +
+          " guilds")
+	await bot.change_presence(activity=discord.Streaming(name="$help", url="http://www.twitch.tv/redpenguinyt"))
 
-sad_words = ["sad", "depressed", "unhappy", "angry", "miserable"]
-starter_encouragements = [
-	"Cheer up! ",
-	"Hang in there. ",
-	"You are a great person / bot! "
-]
+@bot.command()
+async def test(ctx):
+	await ctx.channel.send("I'm connected! :D")
 
-def get_quote():
-	response = requests.get("https://zenquotes.io/api/random")
-	json_data = json.loads(response.text)
-	quote = json_data[0]['q'] + " -" + json_data[0]['a']
-	return(quote)
+@bot.command()
+async def inspire(ctx):
+	await ctx.channel.send(extra.get_quote())
 
-@client.event
-async def on_ready():
-    print('We have logged in as {0.user}'.format(client))
+@bot.command()
+async def reverse(ctx, *args):
+	response = ""
+	for arg in args:
+		response += " " + arg
+	await ctx.channel.send(response[::-1])
 
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
-
-    if message.content.startswith('$hello'):
-        await message.channel.send('Hello! I am RedPenguin Bot!')
-
-    if message.content.startswith('$inspire'):
-    	quote = get_quote()
-    	await message.channel.send(quote)
-    
-    msg = message.content
-
-    if any(word in msg for word in sad_words):
-    	rngmsg = random.choice(starter_encouragements) + message.author
-		await message.channel.send(rngmsg)
-
-
-client.run(os.getenv('TOKEN'))
+keep_alive() # Keep bot alive
+bot.run(os.getenv('TOKEN'))  # Send code to Discord
