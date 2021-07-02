@@ -1,16 +1,11 @@
-import discord, os, random
+import discord, os, random, asyncpraw
 from discord.ext import commands
-try:
-	import asyncpraw
-except:
-	os.system("pip install asyncpraw")
-	import asyncpraw
 
 
 reddit = asyncpraw.Reddit(
-    client_id="h1-03_17OBrD1A",
+    client_id=os.environ['reddit_id'],
     client_secret=os.environ['reddit_secret'],
-    user_agent="chrome-browser - RPICDB:v0.0.1 (by /u/RedPenguin_YT)",
+    user_agent=os.environ['reddit_user_agent'],
 )
 
 class Fun(commands.Cog):
@@ -21,7 +16,7 @@ class Fun(commands.Cog):
 
 	@commands.command(help="post a meme!")
 	async def meme(self, ctx, subreddit="memes"):
-		subreddit = await reddit.subreddit(subreddit)
+		subreddit = await reddit.subreddit(subreddit, fetch=True)
 		if subreddit.over18:
 			ctx.reply(f"@everyone {ctx.message.author.mention} is very horny")
 			return
