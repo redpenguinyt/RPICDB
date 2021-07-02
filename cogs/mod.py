@@ -1,5 +1,8 @@
-import discord
+import discord, json
 from discord.ext import commands
+from utils import config
+
+config = config()
 
 class Moderator(commands.Cog):
 	"""Example commands"""
@@ -9,12 +12,20 @@ class Moderator(commands.Cog):
 
 	@commands.command(help="Warn a user for being bad",)
 	@commands.guild_only()
-	@commands.has_permissions(manage_roles=True)
+
 	async def warn(self, ctx, member: discord.User, *, reason="[no reason specified]"):
 		await ctx.channel.send(
 			f"{member.mention} has been warned for {reason}")
 		await member.send(f"You have been warned for {reason}")
 	
+	@commands.command(help="set a prefix")
+	@commands.guild_only()
+	@commands.has_permissions(administrator=True)
+	async def setprefix(self, ctx, prefix=None):
+		prefixes = json.load(open('data/prefixes.json', 'r'))
+		prefixes[ctx.guild.id] = prefix or config["prefix"]
+		json.dump(prefixes, open('data/prefixes.json', 'w'))
+		await ctx.reply("Prefix set!", delete_after=3.0)
 
 	@commands.command(help="mute a user")
 	@commands.has_permissions(manage_messages=True)

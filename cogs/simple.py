@@ -28,17 +28,17 @@ class Simple(commands.Cog):
 
 	@commands.command(help="Invite a user")
 	async def invite(self, ctx, user: discord.User):
-		await ctx.reply("Invite sent!", delete_after=3.0)
+		await ctx.reply("Invite sent!")
 		invitelink = await ctx.channel.create_invite(max_uses=1, unique=True)
 		await user.send("You have been invited to " + str(invitelink))
 
 	@commands.command(help="reverse whatever you say!")
 	async def reverse(self, ctx, *, message):
-		await ctx.reply(message[::-1], delete_after=3.0)
+		await ctx.reply(message[::-1])
 
 	@commands.command(brief="inspiring quote!")
 	async def inspire(self, ctx):
-		await ctx.reply(get_quote(), delete_after=3.0)
+		await ctx.reply(get_quote())
 
 	@commands.command(help="compliment someone!")
 	async def compliment(self, ctx, target):

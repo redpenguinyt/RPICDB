@@ -1,9 +1,7 @@
 {
   "join_message": "I has joined to do stuff 🌟",
   "owners": [666323445453291561],
-  "prefix": [
-    "$"
-  ],
+  "prefix": "$",
   "activity": "$help",
   "activity_type": "playing",
   "status_type": "online",

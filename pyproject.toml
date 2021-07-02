@@ -10,6 +10,7 @@ discord = "^1.0.1"
 flask = "^2.0.1"
 utils = "^1.0.1"
 psutil = "^5.8.0"
+praw = "^7.3.0"
 
 [tool.poetry.dev-dependencies]
 
