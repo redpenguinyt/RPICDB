@@ -4,10 +4,10 @@ from utils import Bot, config
 config = config()
 
 async def determine_prefix(bot, message):
-	prefixes = json.load(open('data/prefixes.json', 'r'))
-	if f"{message.guild.id}" in prefixes:
-		return prefixes[f"{message.guild.id}"]
-	else:
+	try:
+		prefixes = json.load(open('data/guilds.json', 'r'))
+		return prefixes[f"{message.guild.id}"]["prefix"]
+	except:
 		return config["prefix"]
 
 bot = Bot(
@@ -19,7 +19,6 @@ for file in os.listdir("cogs"):
     if file.endswith(".py"):
         name = file[:-3]
         bot.load_extension(f"cogs.{name}")
-
 
 try:
     bot.run(os.environ['token'])

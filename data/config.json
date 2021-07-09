@@ -1,10 +1,10 @@
 {
-  "join_message": "I has joined to do stuff 🌟",
   "owners": [666323445453291561],
   "prefix": "$",
   "activity": "$help",
   "activity_type": "playing",
   "status_type": "online",
-  "alexflipnote_api": "nice_token_you_got_here",
-  "version": "2.0.2"
+  "version": "0.1.7",
+  "lvlmultiplier":50,
+  "debug":true
 }

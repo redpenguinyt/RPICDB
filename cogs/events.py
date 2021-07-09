@@ -18,6 +18,8 @@ class Events(commands.Cog):
 
 		elif isinstance(err, errors.CommandInvokeError):
 			error = traceback_maker(err.original)
+			if "Missing Permissions" in str(err).lower():
+				return await ctx.send("Command error! Missing permissions!")
 
 			if "2000 or fewer" in str(err) and len(ctx.message.clean_content) > 1900:
 				return await ctx.send(
@@ -25,7 +27,9 @@ class Events(commands.Cog):
                     "Both error and command will be ignored."
                 )
 
-			await ctx.send(f"There was an error processing the command ;-;\n{error}")
+			await ctx.send("There was an error processing the command ;-; ")
+			if self.config["debug"]:
+				await ctx.send(error)
 
 		elif isinstance(err, errors.CheckFailure):
 			pass
@@ -39,22 +43,24 @@ class Events(commands.Cog):
 			pass
 
 	@commands.Cog.listener()
-	async def on_guild_join(self, guild):
-		if not self.config["join_message"]:
-			return
-		try:
-			to_send = sorted([chan for chan in guild.channels if chan.permissions_for(guild.me).send_messages and isinstance(chan, discord.TextChannel)], key=lambda x: x.position)[0]
-		except IndexError:
-			pass
-		else:
-			await to_send.send(self.config["join_message"])
-
-	@commands.Cog.listener()
 	async def on_member_join(self, member: discord.Member):
-		member.channel.send(f'Member {member.mention} has joined the server!')
+		print(f"{member.guild.name} > {member} > Joined the guild")
+		channel = discord.utils.get(member.guild.text_channels, name="welcome")
+		if not channel:
+			channel = member.guild.system_channel
+		embed = discord.Embed(
+			description = "Welcome to our server!",
+			color=0xe74c3c
+		)
+		embed.set_thumbnail(url=member.avatar_url)
+		embed.set_author(name=member.name,icon_url=member.avatar_url)
+		embed.set_footer(text=member.guild, icon_url=member.guild.icon_url)
+		embed.timestamp = datetime.utcnow()
+		await channel.send(embed=embed)
+		channel.send(f'Member {member.mention} has joined the server!')
 		await member.send(f'Welcome to {member.guild.name}! We hope you enjoy the server')
-		role = discord.utils.get(member.guild.roles,name="Member")
-		await member.add_roles(member, role)
+		await member.add_roles(
+			discord.utils.get(member.guild.roles, name="Member"))
 
 	@commands.Cog.listener()
 	async def on_command(self, ctx):
@@ -83,9 +89,7 @@ class Events(commands.Cog):
 			status=status_type.get(status, discord.Status.online)
 		)
 
-		# Indicate that the bot has successfully booted up
 		print(f"Ready: {self.bot.user} | Servers: {len(self.bot.guilds)}")
-
 
 def setup(bot):
 	bot.add_cog(Events(bot))

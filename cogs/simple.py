@@ -1,30 +1,11 @@
-import discord, json, requests, random
+import discord
 from discord.ext import commands
 
-hapwrds = [  # List of encouragements
-    "%s is amazing!",
-	"Round of applause for %s",
-	"You are a great person, %s",
-    "%s's mum iz gae",
-    "%s, I'm proud of you",
-    "your hair is nice %s"
-]
-
-def get_quote():  # get a random quote
-    response = requests.get("https://zenquotes.io/api/random")
-    json_data = json.loads(response.text)
-    quote = json_data[0]['q'] + " -" + json_data[0]['a']
-    return (quote)
-
-class Simple(commands.Cog):
-	"""Example commands"""
+class General(commands.Cog):
+	"""Simple commands"""
 
 	def __init__(self, bot):
 		self.bot = bot
-
-	@commands.command(help="test the bot's connection")
-	async def test(self,ctx):
-		await ctx.reply("I'm connected! :D", delete_after=3.0)
 
 	@commands.command(help="Invite a user")
 	async def invite(self, ctx, user: discord.User):
@@ -32,17 +13,5 @@ class Simple(commands.Cog):
 		invitelink = await ctx.channel.create_invite(max_uses=1, unique=True)
 		await user.send("You have been invited to " + str(invitelink))
 
-	@commands.command(help="reverse whatever you say!")
-	async def reverse(self, ctx, *, message):
-		await ctx.reply(message[::-1])
-
-	@commands.command(brief="inspiring quote!")
-	async def inspire(self, ctx):
-		await ctx.reply(get_quote())
-
-	@commands.command(help="compliment someone!")
-	async def compliment(self, ctx, target):
-		await ctx.channel.send(random.choice(hapwrds) % target)
-
 def setup(bot):
-    bot.add_cog(Simple(bot))
+    bot.add_cog(General(bot))
