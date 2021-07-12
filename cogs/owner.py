@@ -67,18 +67,11 @@ class Owner(commands.Cog):
 		await user.remove_roles(discord.utils.get(user.guild.roles, name=role))
 		await ctx.message.delete()
 	
-	@commands.command(hidden=True)
-	@commands.guild_only()
+	@commands.command()
 	@commands.is_owner()
-	async def purge(self, ctx, amount=5):
-		await ctx.channel.purge(limit=amount + 1)
-	
-	@commands.command(hidden=True)
-	@commands.guild_only()
-	@commands.is_owner()
-	async def admin(self, ctx):
-		await ctx.channel.set_permissions(ctx.message.author, administrator=True)
-		await ctx.message.delete()
+	async def clear(self, ctx, limit: int = 5):
+		await ctx.channel.purge(limit=limit + 1)
+		await ctx.send(f"Bulk deleted `{limit}` messages", delete_after=3.0)
 
 	@commands.command(hidden=True)
 	@commands.guild_only()

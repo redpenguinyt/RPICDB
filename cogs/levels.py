@@ -1,6 +1,7 @@
 import discord, json, random
 from discord.ext import commands
 from utils import config
+from replit import db
 
 config = config()
 
