@@ -4,7 +4,7 @@
   "activity": "$help",
   "activity_type": "playing",
   "status_type": "online",
-  "version": "0.1.7",
+  "version": "0.2.3",
   "lvlmultiplier":50,
-  "debug":true
+  "debug":false
 }

@@ -1,5 +1,6 @@
 import discord, os, json
 from utils import Bot, config
+from keep_alive import keep_alive
 
 config = config()
 
@@ -20,6 +21,7 @@ for file in os.listdir("cogs"):
         name = file[:-3]
         bot.load_extension(f"cogs.{name}")
 
+keep_alive()
 try:
     bot.run(os.environ['token'])
 except Exception as e:

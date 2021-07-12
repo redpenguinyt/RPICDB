@@ -42,19 +42,25 @@ class Owner(commands.Cog):
 			await ctx.send('**`SUCCESS`**', delete_after=3.0)
 	
 	@commands.command(hidden=True, aliases=["rnchn"])
+	@commands.guild_only()
 	@commands.is_owner()
 	async def renamechannel(self, ctx, *, new_name):
 		await ctx.channel.edit(name=new_name)
 		await ctx.message.delete()
 
 	@commands.command(hidden=True, aliases=["role","giverole"])
+	@commands.guild_only()
 	@commands.is_owner()
 	async def addrole(self, ctx, *, role="Owner"):
 		user = ctx.message.author
-		await user.add_roles(discord.utils.get(user.guild.roles, name=role))
+		try:
+			await user.add_roles(discord.utils.get(user.guild.roles, name=role))
+		except:
+			ctx.reply("Failed to execute",delete_after=1)
 		await ctx.message.delete()
 	
 	@commands.command(hidden=True, aliases=["deleterole","delrole"])
+	@commands.guild_only()
 	@commands.is_owner()
 	async def removerole(self, ctx, *, role="Owner"):
 		user = ctx.message.author
@@ -62,19 +68,20 @@ class Owner(commands.Cog):
 		await ctx.message.delete()
 	
 	@commands.command(hidden=True)
+	@commands.guild_only()
 	@commands.is_owner()
 	async def purge(self, ctx, amount=5):
 		await ctx.channel.purge(limit=amount + 1)
 	
 	@commands.command(hidden=True)
+	@commands.guild_only()
 	@commands.is_owner()
 	async def admin(self, ctx):
-		overwrite = discord.PermissionOverwrite()
-		overwrite.administrator=True
-		await self.bot.edit_channel_permissions(ctx.message.channel, ctx.message.author, overwrite)
+		await ctx.channel.set_permissions(ctx.message.author, administrator=True)
 		await ctx.message.delete()
 
 	@commands.command(hidden=True)
+	@commands.guild_only()
 	@commands.is_owner()
 	async def getroles(self, ctx):
 		roles = str(ctx.message.guild.roles)
