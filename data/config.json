@@ -6,5 +6,5 @@
   "status_type": "online",
   "version": "0.2.3",
   "lvlmultiplier":50,
-  "debug":false
+  "debug":true
 }

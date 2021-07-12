@@ -2,10 +2,10 @@ from flask import Flask, redirect
 from threading import Thread
 import logging
 
-app = Flask('Someone Bot')
+app = Flask('RPICDB')
 
 log = logging.getLogger('werkzeug')
-log.setLevel(logging.ERROR) # Only print Errors to console
+log.setLevel(logging.ERROR)
 
 @app.route('/')
 def home():

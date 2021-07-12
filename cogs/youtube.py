@@ -10,11 +10,11 @@ def getytchannel(id):
 
 def isNewVideo(channelid):
 	acts = api.get_activities_by_channel(channel_id=channelid, count=1).items[0].contentDetails.upload.videoId
-	if channelid in db.keys():
-		prev_acts = db[channelid]
-		db[channelid] = acts
+	if channelid in db["channels"]:
+		prev_acts = db["channels"][channelid]
+		db["channels"][channelid] = acts
 	else:
-		db[channelid] = acts
+		db["channels"][channelid] = acts
 		return
 	
 	return acts != prev_acts

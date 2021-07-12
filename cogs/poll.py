@@ -41,7 +41,7 @@ class Polls(commands.Cog):
             pass # oh well
 
         answer = '\n'.join(f'{keycap}: {content}' for keycap, content in answers)
-        actual_poll = await ctx.send(f'{ctx.author} asks: {question}\n\n{answer}')
+        actual_poll = await ctx.send(f'{ctx.author.mention} asks: {question}\n\n{answer}')
         for emoji, _ in answers:
             await actual_poll.add_reaction(emoji)
 
@@ -71,7 +71,7 @@ class Polls(commands.Cog):
             pass
 
         body = "\n".join(f"{key}: {c}" for key, c in choices)
-        poll = await ctx.send(f'{ctx.author} asks: {question}\n\n{body}')
+        poll = await ctx.send(f'{ctx.author.mention} asks: {question}\n\n{body}')
         for emoji, _ in choices:
             await poll.add_reaction(emoji)
 

@@ -1,6 +1,7 @@
-import discord, json
+import discord
 from discord.ext import commands
 from utils import config
+from replit import db
 
 config = config()
 
@@ -18,19 +19,17 @@ class Info(commands.Cog):
 
 	@commands.command(aliases=["level","user"],help="get info about a user or yourself!")
 	@commands.guild_only()
-	async def userinfo(self, ctx, user: discord.Member):
+	async def userinfo(self, ctx, user: discord.Member=None):
 		if user is None:
 			user = ctx.message.author
-		users = json.load(open('data/users.json', 'r'))
-
-		if not users[f"{user.id}"]:
-			await ctx.reply("Could not get info on that user!")
-			return
+		userinfo = {"level":1,"xp":0}
+		if f"{user.id}" in db["users"]:
+			userinfo = db["users"][f"{user.id}"]
+		lvl = userinfo['level']
+		xp = userinfo["xp"]
+		lvl_lmt = lvl * config["lvlmultiplier"]
 
 		date_format = "%a, %d %b %Y %I:%M %p"
-		lvl = users[f"{user.id}"]['level']
-		xp = users[f"{user.id}"]["xp"]
-		lvl_lmt = lvl * config["lvlmultiplier"]
 		members = sorted(ctx.guild.members, key=lambda m: m.joined_at)
 		role_string = ' '.join([r.mention for r in user.roles][1:])
 
