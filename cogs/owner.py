@@ -1,6 +1,5 @@
-import discord
+import discord, json
 from discord.ext import commands
-from string import digits
 
 class Owner(commands.Cog):
 	def __init__(self, bot):
@@ -57,7 +56,7 @@ class Owner(commands.Cog):
 	@commands.command(hidden=True, aliases=["deleterole","delrole"])
 	@commands.guild_only()
 	@commands.is_owner()
-	async def removerole(self, ctx, *, role="Owner"):
+	async def removerole(self, ctx, *,role="Owner"):
 		user = ctx.message.author
 		await user.remove_roles(discord.utils.get(user.guild.roles, name=role))
 		await ctx.message.delete()
@@ -66,7 +65,7 @@ class Owner(commands.Cog):
 	@commands.is_owner()
 	async def purge(self, ctx, limit: int = 5):
 		await ctx.channel.purge(limit=limit + 1)
-		await ctx.send(f"Bulk deleted `{limit}` messages", delete_after=3.0)
+		await ctx.send(f"Bulk deleted `{limit}` messages", delete_after=3)
 
 	@commands.command(hidden=True)
 	@commands.guild_only()
@@ -74,6 +73,18 @@ class Owner(commands.Cog):
 	async def getroles(self, ctx):
 		roles = str(ctx.message.guild.roles)
 		await ctx.message.author.send(roles)
+		await ctx.message.delete()
+    
+	@commands.command(hidden=True, aliases=["debug"])
+	@commands.is_owner()
+	async def toggledebug(self, ctx):
+		config = json.load(open('data/config.json', 'r'))
+		newsetting = config["debug"] == False
+		
+		config["debug"] = newsetting
+		json.dump(config, open('data/config.json', 'w'), indent=4)
+
+		await ctx.reply(f"Debug set to {newsetting}!", delete_after=3)
 		await ctx.message.delete()
 
 def setup(bot):

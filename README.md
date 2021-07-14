@@ -3,7 +3,7 @@ Hey there! Do you want a discord bot that adds a bunch of useless features, like
 
 ### Features:
 
-* Mod commands - warn, mute, clear and setprefix
+* Mod commands - warn, mute, clear, block, nuke and
 * Leveling system
 * Fun commands! Memes, choose, rickrolls!
 * Utility commands! Get information about users and your server, and more!
@@ -15,6 +15,7 @@ Hey there! Do you want a discord bot that adds a bunch of useless features, like
 #### Config
 *   `$setprefix <prefix>` - set a custom prefix for your bot!
 *   `$togglelevels` - toggle the levelling system in that guild!
+
 #### Fun
 *   `$choose [things]` - randomly choose between different things!
 *   `$compliment <user>` - send a compliment to a user
@@ -22,14 +23,18 @@ Hey there! Do you want a discord bot that adds a bunch of useless features, like
 *   `$meme [subreddit]` - Post a meme from any subreddit! Gets memes from [r/memes](https://reddit.com/r/memes) by default
 *   `$reverse <text>` - reverse some text
 *   `$rickroll` - post a rickroll!
+
 #### General
 *   `$invite <user>` - invite a user via DMs
+
 #### Info
 * `$ping [user]` - get a user's ping
 * `$serverinfo` - get info about the server!
 * `$userinfo [user]` - get info about a user!
+
 #### Levels
 * `$givexp <amount> [user]` - give xp to a user
+
 #### Moderation
 * `$ban <user> [reason]` - ban a user
 * `$block <user>` - block a user from the channel
@@ -39,11 +44,14 @@ Hey there! Do you want a discord bot that adds a bunch of useless features, like
 * `$unblock <user>` - unblock a user from the channel
 * `$unmute <user>` - unmute a user
 * `$warn <user> [reason]` - will send the user a warning, but essentially not do much
+* `$nuke` - Nuke the channel and create a new channel with the same permissions
 #### Polls
 * `$poll <question>` - Interactively creates a poll with the following question. To vote, use reactions!
 * `$quickpoll "<question>" <options>` - Makes a poll quickly. The first argument is the question and the rest are the choices
+
 #### Youtube
 * `$setchannelid <youtube channel id>` - set a YT channel id to get YouTube notifications!
+
 #### Help
 * `$help` - get a list of these commands
 

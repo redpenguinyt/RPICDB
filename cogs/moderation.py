@@ -30,13 +30,9 @@ async def mute(ctx, user, reason):
     hell = discord.utils.get(ctx.guild.text_channels, name="hell")
     if not muted:
         try:
-            muted = await ctx.guild.create_role(name="Muted",
-                                                reason="To use for muting")
+            muted = await ctx.guild.create_role(name="Muted",reason="To use for muting")
             for channel in ctx.guild.channels:
-                await channel.set_permissions(muted,
-                                              send_messages=False,
-                                              read_message_history=True,
-                                              read_messages=True)
+                await channel.set_permissions(muted,send_messages=False,read_message_history=True,read_messages=True)
         except discord.Forbidden:
             return await ctx.send("I have no permissions to make a muted role")
         await user.add_roles(muted)
@@ -146,6 +142,12 @@ class Moderation(commands.Cog):
 
         await ctx.set_permissions(user, send_messages=True)
 
+    @commands.command(help="nuke the channel and make a copy with the same permissions")
+    @commands.has_permissions(manage_channels=True)
+    async def nuke(self, ctx):
+        await ctx.channel.clone()
+        await ctx.channel.delete()
+        
 
 def setup(bot):
     bot.add_cog(Moderation(bot))

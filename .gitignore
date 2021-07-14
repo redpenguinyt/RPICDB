@@ -3,6 +3,5 @@ pyproject.toml
 __pycache__/
 cogs/__pycache__/
 cogs/owner.py
-data/users.json
 data/guilds.json
 .env

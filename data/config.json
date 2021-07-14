@@ -1,10 +1,12 @@
 {
-  "owners": [666323445453291561],
-  "prefix": "$",
-  "activity": "$help",
-  "activity_type": "playing",
-  "status_type": "online",
-  "version": "0.2.7",
-  "lvlmultiplier":50,
-  "debug":false
+    "owners": [
+        666323445453291561
+    ],
+    "prefix": "$",
+    "activity": "$help",
+    "activity_type": "playing",
+    "status_type": "online",
+    "version": "0.2.7",
+    "lvlmultiplier": 50,
+    "debug": true
 }
