@@ -3,12 +3,12 @@ Hey there! Do you want a discord bot that adds a bunch of useless features, like
 
 ### Features:
 
-* Mod commands - warn, mute, clear, block, nuke and
-* Leveling system
+* Mod commands - warn, mute, clear, block, nuke, kick and ban
+* Toggleable levelling system
 * Fun commands! Memes, choose, rickrolls!
 * Utility commands! Get information about users and your server, and more!
-* Youtube notifications! User set
-* 
+* Youtube notifications! Set a yt channel id and get notified of your favourite youtuber's uploads!
+* Polls! Create reaction polls
 
 ### Commands:
 
