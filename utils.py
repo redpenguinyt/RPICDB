@@ -1,4 +1,4 @@
-:raised_back_of_hand:import discord, json, traceback, os
+import discord, json, traceback, os
 from discord.ext.commands import AutoShardedBot
 try:
 	from pyyoutube import Api
