@@ -11,7 +11,7 @@ class Polls(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(help="Interactively creates a poll with the following question. To vote, use reactions!")
+    @commands.command(help="Interactively creates a poll with the question.")
     @commands.guild_only()
     async def poll(self, ctx, *, question):
         messages = [ctx.message]
@@ -50,7 +50,7 @@ class Polls(commands.Cog):
         if isinstance(error, commands.MissingRequiredArgument):
             return await ctx.send('Missing the question.')
 
-    @commands.command(help="Makes a poll quickly. The first argument is the question and the rest are the choices.")
+    @commands.command(brief="Make a poll quickly", help="Make a poll quickly. The first argument is the question and the rest are the choices.")
     @commands.guild_only()
     async def quickpoll(self, ctx, *questions_and_choices: str):
         if len(questions_and_choices) < 3:

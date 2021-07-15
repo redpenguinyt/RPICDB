@@ -1,6 +1,7 @@
 import discord, json
 from discord.ext import commands
 from utils import prettysend
+from cogs import youtube as yt
 
 class Config(commands.Cog):
 	"""Configure the bot - Admin only"""
@@ -35,6 +36,12 @@ class Config(commands.Cog):
 
 		newPreference = guilds[f"{ctx.guild.id}"]["isLevels"]
 		await prettysend(ctx, f"Levelling preference changed to {newPreference}!")
+	
+	@commands.command(help="set a yt channel id to be notified of uploads")
+	@commands.guild_only()
+	@commands.has_permissions(administrator=True)
+	async def setchannelid(self, ctx, channelid=""):
+		yt.setchannelid(self, ctx, channelid="")
 
 def setup(bot):
 	bot.add_cog(Config(bot))

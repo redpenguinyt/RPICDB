@@ -144,7 +144,7 @@ class Moderation(commands.Cog):
         await ctx.set_permissions(user, send_messages=True)
         await prettysend(ctx, "Unblocked user from this channel")
 
-    @commands.command(help="nuke the channel and make a copy with the same permissions")
+    @commands.command(help="nuke the channel and make a copy")
     @commands.has_permissions(manage_channels=True)
     async def nuke(self, ctx):
         await ctx.channel.clone()

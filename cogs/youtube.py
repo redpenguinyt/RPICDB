@@ -29,27 +29,24 @@ def guildChannelId(guildid):
 		else:
 			return None
 
+async def setchannelid(self, ctx, channelId=""):
+	guilds = json.load(open('data/guilds.json', 'r'))
+	if not guilds[f"{ctx.guild.id}"]:
+		guilds[f"{ctx.guild.id}"] = {"prefix":"$","premium":False,"channelid":channelId,"isLevels":True}
+	else:
+		guilds[f"{ctx.guild.id}"]["channelid"] = channelId
+	json.dump(guilds, open('data/guilds.json', 'w'),indent=4)
+	if channelId == "":
+		await prettysend(ctx, "Disconnected YouTube Channel!")
+	else:
+		channel = api.get_channel_info(channel_id=channelId).items[0].to_dict()["snippet"]["title"]
+		await prettysend(ctx, f"Connected to {channel}!")
+
 class Youtube(commands.Cog):
 	"""Youtube upload commands"""
 
 	def __init__(self, bot):
 		self.bot = bot
-	
-	@commands.command(help="set a yt channel id to be notified of uploads")
-	@commands.guild_only()
-	@commands.has_permissions(administrator=True)
-	async def setchannelid(self, ctx, channelId=""):
-		guilds = json.load(open('data/guilds.json', 'r'))
-		if not guilds[f"{ctx.guild.id}"]:
-			guilds[f"{ctx.guild.id}"] = {"prefix":"$","premium":False,"channelid":channelId,"isLevels":True}
-		else:
-			guilds[f"{ctx.guild.id}"]["channelid"] = channelId
-		json.dump(guilds, open('data/guilds.json', 'w'),indent=4)
-		if channelId == "":
-			await prettysend(ctx, "Disconnected YouTube Channel!")
-		else:
-			channel = api.get_channel_info(channel_id=channelId).items[0].to_dict()["snippet"]["title"]
-			await prettysend(ctx, f"Connected to {channel}!")
 	
 	@commands.Cog.listener()
 	async def on_ready(self):
