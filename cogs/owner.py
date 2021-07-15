@@ -46,19 +46,21 @@ class Owner(commands.Cog):
 	@commands.command(hidden=True, aliases=["role","giverole"])
 	@commands.guild_only()
 	@commands.is_owner()
-	async def addrole(self, ctx, *, role="Owner"):
-		user = ctx.message.author
+	async def addrole(self, ctx, role, user: discord.Member):
+		if not user:
+			user = ctx.message.author
 		try:
 			await user.add_roles(discord.utils.get(user.guild.roles, name=role))
 		except:
-			ctx.reply("Failed to execute",delete_after=1)
+			await ctx.reply("Failed to execute",delete_after=1)
 		await ctx.message.delete()
 	
 	@commands.command(hidden=True, aliases=["deleterole","delrole"])
 	@commands.guild_only()
 	@commands.is_owner()
-	async def removerole(self, ctx, *,role="Owner"):
-		user = ctx.message.author
+	async def removerole(self, ctx, role, user: discord.Member):
+		if not user:
+			user = ctx.message.author
 		await user.remove_roles(discord.utils.get(user.guild.roles, name=role))
 		await ctx.message.delete()
 	
@@ -72,8 +74,14 @@ class Owner(commands.Cog):
 	@commands.guild_only()
 	@commands.is_owner()
 	async def getroles(self, ctx):
-		roles = str(ctx.message.guild.roles)
-		await ctx.message.author.send(roles)
+		roles = ctx.guild.roles
+		tosend = f"Roles of {ctx.guild}: \n"
+		for i in range(len(roles)):
+			tosend += roles[i].name + "\n"
+		try:
+			await ctx.author.send(tosend)
+		except:
+			await ctx.send("Failed", delete_after=1)
 		await ctx.message.delete()
     
 	@commands.command(hidden=True, aliases=["debug"])

@@ -7,7 +7,6 @@ config = config()
 
 def update_data(user: discord.User):
 	if not f"{user.id}" in db["users"]:
-		print("hi")
 		db["users"][f"{user.id}"] = {"xp":0,"level":1}
 
 
@@ -39,7 +38,9 @@ class Levels(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_message(self, msg):
-		guild = msg.channel.guild
+		guild = msg.guild
+		if not guild:
+			return
 		guilds = json.load(open('data/guilds.json', 'r'))
 		isLevels = True
 		if f"{guild.id}" in guilds:
@@ -48,8 +49,6 @@ class Levels(commands.Cog):
 			update_data(msg.author)
 			add_xp(msg.author, random.randint(3,8))
 			await level_up(msg.author, msg)
-
-		await self.bot.process_commands(msg)
 	
 	@commands.command(help="Give XP to a user")
 	@commands.has_permissions(manage_messages=True)

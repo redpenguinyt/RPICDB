@@ -1,4 +1,4 @@
-import discord, json, traceback, os
+:raised_back_of_hand:import discord, json, traceback, os
 from discord.ext.commands import AutoShardedBot
 try:
 	from pyyoutube import Api
@@ -12,11 +12,6 @@ class Bot(AutoShardedBot):
     def __init__(self, *args, prefix=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.prefix = prefix
-
-    async def on_message(self, msg):
-        if not self.is_ready() or msg.author.bot or not isinstance(msg.channel, discord.DMChannel) or getattr(msg.channel.permissions_for(msg.guild.bot), "send_messages"):
-            return
-        await self.bot.process_commands(msg)
 
 def isPremium(guildid):
 	guilds = json.load(open('data/guilds.json', 'r'))
