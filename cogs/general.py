@@ -3,7 +3,7 @@ from discord.ext import commands
 from utils import prettysend
 
 class General(commands.Cog):
-	"""Simple commands"""
+	"""General commands"""
 
 	def __init__(self, bot):
 		self.bot = bot
