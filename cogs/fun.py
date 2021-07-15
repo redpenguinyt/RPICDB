@@ -1,6 +1,6 @@
 import discord, os, random, asyncpraw, requests, json
 from discord.ext import commands
-from utils import isPremium
+from utils import isPremium, prettysend
 
 reddit = asyncpraw.Reddit(
     client_id=os.environ['reddit_id'],
@@ -29,6 +29,23 @@ class Fun(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
+	@commands.command(help="poop")
+	async def poop(self, ctx):
+		await ctx.send("""
+░░░░░░░░░░░█▀▀░░█░░░░░░
+░░░░░░▄▀▀▀▀░░░░░█▄▄░░░░
+░░░░░░█░█░░░░░░░░░░▐░░░
+░░░░░░▐▐░░░░░░░░░▄░▐░░░
+░░░░░░█░░░░░░░░▄▀▀░▐░░░
+░░░░▄▀░░░░░░░░▐░▄▄▀░░░░
+░░▄▀░░░▐░░░░░█▄▀░▐░░░░░
+░░█░░░▐░░░░░░░░▄░█░░░░░
+░░░█▄░░▀▄░░░░▄▀▐░█░░░░░
+░░░█▐▀▀▀░▀▀▀▀░░▐░█░░░░░
+░░▐█▐▄░░▀░░░░░░▐░█▄▄░░
+░░░▀▀░▄POOP▄░░░▐▄▄▄▀░░░
+		""")
+
 	@commands.command(help="post a meme!")
 	async def meme(self, ctx, sub="memes"):
 		sub.replace("r/","")
@@ -45,7 +62,7 @@ class Fun(commands.Cog):
 		embed = discord.Embed(title=meme.title,color=0xe74c3c)
 		embed.set_image(url=meme.url)
 		embed.set_footer(text=f"Credit to u/{meme.author.name}")
-		await ctx.channel.send(embed=embed)
+		await ctx.send(embed=embed)
 	
 	@commands.command(help='Rickroll!')
 	async def rickroll(self, ctx):
@@ -60,19 +77,19 @@ class Fun(commands.Cog):
 		
 	@commands.command(help="reverse whatever you say!")
 	async def reverse(self, ctx, *, message):
-		await ctx.reply(message[::-1])
+		await prettysend(ctx, message[::-1])
 
 	@commands.command(brief="inspiring quote!")
 	async def inspire(self, ctx):
-		await ctx.reply(get_quote())
+		await prettysend(ctx, get_quote())
 
 	@commands.command(help="compliment someone!")
 	async def compliment(self, ctx, target):
-		await ctx.channel.send(random.choice(hapwrds) % target)
+		await ctx.send(random.choice(hapwrds) % target)
 	
 	@commands.command(help="RPICDB will help you choose something!")
 	async def choose(self, ctx, *, things="yes no"):
-		await ctx.reply(random.choice(things.split(" ")))
+		await prettysend(ctx, random.choice(things.split(" ")))
 
 def setup(bot):
 	bot.add_cog(Fun(bot))

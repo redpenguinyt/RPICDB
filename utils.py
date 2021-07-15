@@ -32,6 +32,13 @@ def config(filename: str = "data/config"):
     except FileNotFoundError:
         raise FileNotFoundError("JSON file wasn't found")
 
+async def prettysend(ctx, text):
+	embed = discord.Embed(
+		title = text,
+		color=0xe74c3c
+	)
+	await ctx.reply(embed=embed)
+
 def traceback_maker(err, advance: bool = True):
     _traceback = ''.join(traceback.format_tb(err.__traceback__))
     error = ('```py\n{1}{0}: {2}\n```').format(type(err).__name__, _traceback, err)

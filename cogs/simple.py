@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from utils import prettysend
 
 class General(commands.Cog):
 	"""Simple commands"""
@@ -9,7 +10,7 @@ class General(commands.Cog):
 
 	@commands.command(help="Invite a user")
 	async def invite(self, ctx, user: discord.User):
-		await ctx.reply("Invite sent!")
+		await prettysend(ctx, "Invite sent!")
 		invitelink = await ctx.channel.create_invite(max_uses=1, unique=True)
 		await user.send("You have been invited to " + str(invitelink))
 

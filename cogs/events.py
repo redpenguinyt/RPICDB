@@ -14,7 +14,7 @@ class Events(commands.Cog):
 	async def on_command_error(self, ctx, err):
 		if isinstance(err, errors.MissingRequiredArgument) or isinstance(err, errors.BadArgument):
 			helper = str(ctx.invoked_subcommand) if ctx.invoked_subcommand else str(ctx.command)
-			await ctx.send_help(helper)
+			await ctx.send(helper)
 
 		elif isinstance(err, errors.CommandInvokeError):
 			error = traceback_maker(err.original)
@@ -22,7 +22,7 @@ class Events(commands.Cog):
 				return await ctx.send("Command error! Missing permissions!")
 
 			if "2000 or fewer" in str(err) and len(ctx.message.clean_content) > 1900:
-				return await ctx.send(
+				return await prettysend(ctx,
 					"You attempted to make the command display more than 2,000 characters...\n"
                     "Both error and command will be ignored."
                 )
@@ -49,7 +49,8 @@ class Events(commands.Cog):
 		if not channel:
 			channel = member.guild.system_channel
 		embed = discord.Embed(
-			description = "Welcome to our server!",
+			title = "Welcome to our server!",
+			description = f"{member.mention} has joined the server!",
 			color=0xe74c3c
 		)
 		embed.set_thumbnail(url=member.avatar_url)
@@ -57,7 +58,6 @@ class Events(commands.Cog):
 		embed.set_footer(text=member.guild, icon_url=member.guild.icon_url)
 		embed.timestamp = datetime.utcnow()
 		await channel.send(embed=embed)
-		channel.send(f'Member {member.mention} has joined the server!')
 		await member.send(f'Welcome to {member.guild.name}! We hope you enjoy the server')
 		await member.add_roles(
 			discord.utils.get(member.guild.roles, name="Member"))

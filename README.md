@@ -21,11 +21,12 @@ Hey there! Do you want a discord bot that adds a bunch of useless features, like
 *   `$compliment <user>` - send a compliment to a user
 *   `$inspire` - get an inspirational quote!
 *   `$meme [subreddit]` - Post a meme from any subreddit! Gets memes from [r/memes](https://reddit.com/r/memes) by default
-*   `$reverse <text>` - reverse some text
-*   `$rickroll` - post a rickroll!
+* `$reverse <text>` - reverse some text
+* `$rickroll` - post a rickroll!
+* `$poop` - poop ASCII
 
 #### General
-*   `$invite <user>` - invite a user via DMs
+* `$invite <user>` - invite a user via DMs
 
 #### Info
 * `$ping [user]` - get a user's ping
@@ -34,6 +35,7 @@ Hey there! Do you want a discord bot that adds a bunch of useless features, like
 
 #### Levels
 * `$givexp <amount> [user]` - give xp to a user
+* `$top` - Check the levelling leaderboard
 
 #### Moderation
 * `$ban <user> [reason]` - ban a user

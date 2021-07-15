@@ -1,5 +1,6 @@
 import discord, json
 from discord.ext import commands
+from utils import prettysend
 
 class Owner(commands.Cog):
 	def __init__(self, bot):
@@ -7,7 +8,7 @@ class Owner(commands.Cog):
 
 	@commands.command(hidden=True)
 	async def test(self,ctx):
-		await ctx.reply("I'm connected! :D", delete_after=3.0)
+		await prettysend(ctx, "I'm connected! :D")
 
 	@commands.command(aliases=["load"], hidden=True)
 	@commands.is_owner()

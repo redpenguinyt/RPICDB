@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from utils import config
+from utils import config, prettysend
 from replit import db
 
 config = config()
@@ -68,9 +68,10 @@ class Info(commands.Cog):
 			embed.add_field(name="Region", value=ctx.guild.region, inline=True)
 			embed.add_field(name="Created", value=simpledate(ctx.guild.created_at), inline=True)
 			await ctx.reply(embed=embed)
+
 	@commands.command(help="check your ping")
 	async def ping(self, ctx):
-		await ctx.send(f"{ctx.author.mention}\'s: {round(self.bot.latency * 1000)}",delete_after=3.0)
+		await prettysend(ctx, f"{ctx.author.mention}\'s: {round(self.bot.latency * 1000)}",delete_after=3.0)
 		await ctx.message.delete()
 
 def setup(bot):

@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-
+from utils import prettysend
 
 # This prevents staff members from being punished
 class Sinner(commands.Converter):
@@ -36,10 +36,10 @@ async def mute(ctx, user, reason):
         except discord.Forbidden:
             return await ctx.send("I have no permissions to make a muted role")
         await user.add_roles(muted)
-        await ctx.send(f"{user.mention} has been sent to hell for {reason}")
+        await prettysend(ctx, f"{user.mention} has been sent to hell for {reason}")
     else:
         await user.add_roles(muted)
-        await ctx.send(f"{user.mention} has been sent to hell for {reason}")
+        await prettysend(ctx, f"{user.mention} has been sent to hell for {reason}")
 
     if not hell:
         overwrites = {
@@ -53,7 +53,7 @@ async def mute(ctx, user, reason):
         try:
             channel = await ctx.guild.create_text_channel(
                 'hell', overwrites=overwrites)
-            await channel.send(
+            await prettysend(channel, 
                 "Welcome to hell.. You will spend your time here until you get unmuted. Enjoy the silence."
             )
         except discord.Forbidden:
@@ -80,7 +80,7 @@ class Moderation(commands.Cog):
             await ctx.guild.ban(
                 user, f"By {ctx.author} for {reason}"
                 or f"By {ctx.author} for None Specified")
-            await ctx.channel.send(
+            await prettysend(ctx,
                 f"{user.mention} was banned by {ctx.message.author} for {reason}"
             )
         except discord.Forbidden:
@@ -100,7 +100,7 @@ class Moderation(commands.Cog):
 
         try:  # tries to kick user
             await ctx.guild.kick(user)
-            await ctx.send(
+            await prettysend(ctx, 
                 f"{ctx.author.mention} kicked {user.mention} for {reason}")
         except discord.Forbidden:
             return await ctx.send(
@@ -122,7 +122,7 @@ class Moderation(commands.Cog):
     @commands.command(help="Warn a user for being bad")
     @commands.guild_only()
     async def warn(self, ctx, member: discord.Member, *, reason="treason"):
-        await ctx.channel.send(f"{member.mention} has been warned for {reason}"
+        await prettysend(ctx, f"{member.mention} has been warned for {reason}"
                                )
         await member.send(f"You have been warned for {reason}")
 
@@ -133,6 +133,7 @@ class Moderation(commands.Cog):
             return await ctx.send("You must specify a user")
 
         await ctx.set_permissions(user, send_messages=False)
+        await prettysend(ctx, "Blocked user form this channel")
 
     @commands.command(help="unblock a use from the current channel")
     @commands.has_permissions(manage_messages=True)
@@ -141,6 +142,7 @@ class Moderation(commands.Cog):
             return await ctx.send("You must specify a user")
 
         await ctx.set_permissions(user, send_messages=True)
+        await prettysend(ctx, "Unblocked user from this channel")
 
     @commands.command(help="nuke the channel and make a copy with the same permissions")
     @commands.has_permissions(manage_channels=True)

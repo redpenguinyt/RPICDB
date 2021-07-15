@@ -21,6 +21,6 @@
         "prefix": "$",
         "premium": true,
         "channelid": "",
-        "isLevels": false
+        "isLevels": true
     }
 }

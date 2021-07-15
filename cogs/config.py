@@ -1,5 +1,6 @@
 import discord, json
 from discord.ext import commands
+from utils import prettysend
 
 class Config(commands.Cog):
 	"""Configure the bot - Admin only"""
@@ -17,7 +18,7 @@ class Config(commands.Cog):
 		else:
 			guilds[f"{ctx.guild.id}"]["prefix"] = prefix
 		json.dump(guilds, open('data/guilds.json', 'w'), indent=4)
-		await ctx.reply("Prefix set!")
+		await prettysend(ctx, "Prefix set!")
 	
 	@commands.command(help="enable/disable the levelling system")
 	@commands.guild_only()
@@ -33,7 +34,7 @@ class Config(commands.Cog):
 		json.dump(guilds, open('data/guilds.json', 'w'), indent=4)
 
 		newPreference = guilds[f"{ctx.guild.id}"]["isLevels"]
-		await ctx.reply(f"Levelling preference changed to {newPreference}!")
+		await prettysend(ctx, f"Levelling preference changed to {newPreference}!")
 
 def setup(bot):
 	bot.add_cog(Config(bot))
