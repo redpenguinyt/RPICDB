@@ -49,7 +49,7 @@ class Fun(commands.Cog):
 	@commands.command(help="post a meme!")
 	async def meme(self, ctx, sub="memes"):
 		sub.replace("r/","")
-		if not isPremium(ctx.guild.id, "premium") and sub != "memes":
+		if not getinfofromguild(ctx.guild.id, "premium") and sub != "memes":
 			sub = "memes"
 			await ctx.reply("Custom subreddits require premium! In the meantime, enjoy a meme from r/memes")
 		subreddit = await reddit.subreddit(sub, fetch=True)

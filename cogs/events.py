@@ -2,7 +2,7 @@ import discord, os, psutil
 from datetime import datetime
 from discord.ext import commands
 from discord.ext.commands import errors
-from utils import config, traceback_maker
+from utils import config, traceback_maker, getinfofromguild
 
 class Events(commands.Cog):
 	def __init__(self, bot):
@@ -22,7 +22,7 @@ class Events(commands.Cog):
 				return await ctx.send("Command error! Missing permissions!")
 
 			if "2000 or fewer" in str(err) and len(ctx.message.clean_content) > 1900:
-				return await prettysend(ctx,
+				return await ctx.send(
 					"You attempted to make the command display more than 2,000 characters...\n"
                     "Both error and command will be ignored."
                 )
@@ -44,6 +44,8 @@ class Events(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_member_join(self, member: discord.Member):
+		if getinfofromguild(member.guild.id, "isWelcome"):
+			return
 		print(f"{member.guild.name} > {member} > Joined the guild")
 		channel = discord.utils.get(member.guild.text_channels, name="welcome")
 		if not channel:

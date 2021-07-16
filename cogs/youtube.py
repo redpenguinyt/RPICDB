@@ -2,8 +2,9 @@ import discord, json, os
 from discord.ext import commands, tasks
 from replit import db
 from pyyoutube import Api
-from utils import prettysend
+from utils import prettysend, getinfofromguild, config
 
+config = config()
 api = Api(api_key=os.environ['yt_api_key'])
 
 def getytchannel(id):
@@ -32,14 +33,15 @@ def guildChannelId(guildid):
 async def setchannelid(self, ctx, channelId=""):
 	guilds = json.load(open('data/guilds.json', 'r'))
 	if not guilds[f"{ctx.guild.id}"]:
-		guilds[f"{ctx.guild.id}"] = {"prefix":"$","premium":False,"channelid":channelId,"isLevels":True}
+		guilds[f"{ctx.guild.id}"] = config["defaultguild"]
+		guilds["{ctx.guild.id}"]["channelid"] = "channelid"
 	else:
 		guilds[f"{ctx.guild.id}"]["channelid"] = channelId
 	json.dump(guilds, open('data/guilds.json', 'w'),indent=4)
 	if channelId == "":
 		await prettysend(ctx, "Disconnected YouTube Channel!")
 	else:
-		channel = api.get_channel_info(channel_id=channelId).items[0].to_dict()["snippet"]["title"]
+		channel = getytchannel(channelId)["snippet"]["title"]
 		await prettysend(ctx, f"Connected to {channel}!")
 
 class Youtube(commands.Cog):

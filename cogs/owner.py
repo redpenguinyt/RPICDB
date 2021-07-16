@@ -65,10 +65,10 @@ class Owner(commands.Cog):
 		await ctx.message.delete()
 	
 	@commands.command(hidden=True)
+	@commands.guild_only()
 	@commands.is_owner()
 	async def purge(self, ctx, limit: int = 5):
 		await ctx.channel.purge(limit=limit + 1)
-		await ctx.send(f"Bulk deleted `{limit}` messages", delete_after=3)
 
 	@commands.command(hidden=True)
 	@commands.guild_only()

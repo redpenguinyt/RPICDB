@@ -1,32 +1,37 @@
 {
-	"865117187353346070":{
-		"prefix":"$",
-		"premium":true,
-		"channelid":"",
-		"isLevels":false
-	},
+    "865117187353346070": {
+        "prefix": "$",
+        "premium": true,
+        "channelid": "",
+        "isLevels": false,
+        "isWelcome": false
+    },
     "858031893471559711": {
         "prefix": "$",
         "premium": false,
         "channelid": "",
-        "isLevels": true
+        "isLevels": true,
+        "isWelcome": true
     },
     "666331295852396583": {
         "prefix": "$",
         "premium": true,
         "channelid": "UC6O9VdxZKwY5jNdu9IfYeLA",
-        "isLevels": true
+        "isLevels": true,
+        "isWelcome": true
     },
     "790559881119268867": {
         "prefix": "$",
         "premium": true,
         "channelid": "UCHQO3LT14CWafXcY01BrEiw",
-        "isLevels": true
+        "isLevels": true,
+        "isWelcome": true
     },
     "758706301932404788": {
         "prefix": "$",
         "premium": true,
         "channelid": "",
-        "isLevels": true
+        "isLevels": true,
+        "isWelcome": true
     }
 }

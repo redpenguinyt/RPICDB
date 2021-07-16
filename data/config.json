@@ -7,7 +7,8 @@
 		"prefix":"",
 		"premium":false,
 		"channelid":"",
-		"isLevels":true
+		"isLevels":true,
+		"isWelcome":true
 	},
     "prefix": "$",
     "activity": "$help",

@@ -107,10 +107,10 @@ class Moderation(commands.Cog):
                 "Are you trying to kick someone higher than the bot?")
 
     @commands.command(help="removes messages from channel")
+	@commands.guild_only()
     @commands.has_permissions(manage_messages=True)
     async def clear(self, ctx, limit: int = 5):
         await ctx.channel.purge(limit=limit + 1)
-        await ctx.send(f"Bulk deleted `{limit}` messages", delete_after=3.0)
 
     @commands.command(help="unmute a user")
     @commands.has_permissions(manage_messages=True)

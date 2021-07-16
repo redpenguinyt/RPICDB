@@ -3,6 +3,20 @@ from discord.ext import commands
 from utils import prettysend, config
 from cogs import youtube as yt
 
+async def toggleguildsetting(self, ctx, setting, userFriendlyName=""):
+	guilds = json.load(open('data/guilds.json', 'r'))
+	if not guilds[f"{ctx.guild.id}"]:
+		guilds[f"{ctx.guild.id}"] = config["defaultguild"]
+		guilds[f"{ctx.guild.id}"] = config["defaultguild"]
+	else:
+		isEnabled = guilds[f"{ctx.guild.id}"][setting] == False
+
+	guilds[f"{ctx.guild.id}"][setting] = isEnabled
+	json.dump(guilds, open('data/guilds.json', 'w'), indent=4)
+
+	newPreference = guilds[f"{ctx.guild.id}"][setting]
+	await prettysend(ctx, f"{userFriendlyName} Setting changed to {newPreference}!")
+
 class Settings(commands.Cog):
 	"""Configure the bot - Admin only"""
 
@@ -27,17 +41,13 @@ class Settings(commands.Cog):
 	@commands.guild_only()
 	@commands.has_permissions(administrator=True)
 	async def togglelevels(self, ctx):
-		guilds = json.load(open('data/guilds.json', 'r'))
-		if not guilds[f"{ctx.guild.id}"]:
-			guilds[f"{ctx.guild.id}"] = config["defaultguild"]
-		else:
-			isEnabled = guilds[f"{ctx.guild.id}"]["isLevels"] == False
-
-		guilds[f"{ctx.guild.id}"]["isLevels"] = isEnabled
-		json.dump(guilds, open('data/guilds.json', 'w'), indent=4)
-
-		newPreference = guilds[f"{ctx.guild.id}"]["isLevels"]
-		await prettysend(ctx, f"Levelling preference changed to {newPreference}!")
+		await toggleguildsetting(self, ctx, "isLevels", "Levelling")
+	
+	@commands.command(help="enable/disable the default welcome message")
+	@commands.guild_only()
+	@commands.has_permissions(administrator=True)
+	async def togglewelcome(self, ctx):
+		await toggleguildsetting(self, ctx, "isWelcome", "Welcome message")
 	
 	@commands.command(help="set a yt channel id to be notified of uploads")
 	@commands.guild_only()
