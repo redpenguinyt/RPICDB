@@ -1,7 +1,12 @@
 import discord, json, traceback, os
-from pyyoutube import Api
 
-api = Api(api_key=os.environ['yt_api_key'])
+def load_json(filename):
+    with open(filename, encoding='utf-8') as infile:
+        return json.load(infile)
+
+def write_json(filename, contents):
+    with open(filename, 'w') as outfile:
+        json.dump(contents, outfile, ensure_ascii=True, indent=4)
 
 def getinfofromguild(guildid, key):
 	guilds = json.load(open('data/guilds.json', 'r'))

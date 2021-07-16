@@ -1,6 +1,6 @@
-import discord, json
+import discord
 from discord.ext import commands
-from utils import prettysend
+from utils import prettysend, load_json, write_json
 
 class Owner(commands.Cog):
 	def __init__(self, bot):
@@ -87,11 +87,11 @@ class Owner(commands.Cog):
 	@commands.command(hidden=True, aliases=["debug"])
 	@commands.is_owner()
 	async def toggledebug(self, ctx):
-		config = json.load(open('data/config.json', 'r'))
+		config = load_json("data/config.json")
 		newsetting = config["debug"] == False
 		
 		config["debug"] = newsetting
-		json.dump(config, open('data/config.json', 'w'), indent=4)
+		write_json("data/config.json", config)
 
 		await ctx.reply(f"Debug set to {newsetting}!", delete_after=3)
 		await ctx.message.delete()

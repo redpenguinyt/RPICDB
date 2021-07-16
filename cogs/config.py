@@ -1,10 +1,10 @@
-import discord, json
+import discord
 from discord.ext import commands
-from utils import prettysend, config
+from utils import prettysend, config, load_json, write_json
 from cogs import youtube as yt
 
 async def toggleguildsetting(self, ctx, setting, userFriendlyName=""):
-	guilds = json.load(open('data/guilds.json', 'r'))
+	guilds = load_json('data/guilds.json')
 	if not guilds[f"{ctx.guild.id}"]:
 		guilds[f"{ctx.guild.id}"] = config["defaultguild"]
 		guilds[f"{ctx.guild.id}"] = config["defaultguild"]
@@ -12,7 +12,7 @@ async def toggleguildsetting(self, ctx, setting, userFriendlyName=""):
 		isEnabled = guilds[f"{ctx.guild.id}"][setting] == False
 
 	guilds[f"{ctx.guild.id}"][setting] = isEnabled
-	json.dump(guilds, open('data/guilds.json', 'w'), indent=4)
+	write_json('data/guilds.json',guilds)
 
 	newPreference = guilds[f"{ctx.guild.id}"][setting]
 	await prettysend(ctx, f"{userFriendlyName} Setting changed to {newPreference}!")
@@ -28,13 +28,13 @@ class Settings(commands.Cog):
 	@commands.guild_only()
 	@commands.has_permissions(administrator=True)
 	async def setprefix(self, ctx, prefix="$"):
-		guilds = json.load(open('data/guilds.json', 'r'))
+		guilds = load_json("data/guilds.json")
 		if not guilds[f"{ctx.guild.id}"]:
 			guilds[f"{ctx.guild.id}"] = config["defaultguild"]
 			guilds[f"{ctx.guild.id}"]["prefix"] = prefix
 		else:
 			guilds[f"{ctx.guild.id}"]["prefix"] = prefix
-		json.dump(guilds, open('data/guilds.json', 'w'), indent=4)
+		write_json('data/guilds.json',guilds)
 		await prettysend(ctx, "Prefix set!")
 	
 	@commands.command(help="enable/disable the levelling system")

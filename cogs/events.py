@@ -44,7 +44,7 @@ class Events(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_member_join(self, member: discord.Member):
-		if getinfofromguild(member.guild.id, "isWelcome"):
+		if not getinfofromguild(member.guild.id, "isWelcome"):
 			return
 		print(f"{member.guild.name} > {member} > Joined the guild")
 		channel = discord.utils.get(member.guild.text_channels, name="welcome")

@@ -1,6 +1,6 @@
-import discord, json, random
+import discord, random
 from discord.ext import commands
-from utils import config, prettysend
+from utils import config, load_json
 from replit import db
 
 config = config()
@@ -41,7 +41,7 @@ class Levels(commands.Cog):
 		guild = msg.guild
 		if not guild:
 			return
-		guilds = json.load(open('data/guilds.json', 'r'))
+		guilds = load_json("data/guilds.json")
 		isLevels = True
 		if f"{guild.id}" in guilds:
 			isLevels = guilds[f"{guild.id}"]["isLevels"]

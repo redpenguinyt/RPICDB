@@ -1,8 +1,8 @@
-import discord, json, os
+import discord, os
 from discord.ext import commands, tasks
 from replit import db
 from pyyoutube import Api
-from utils import prettysend, getinfofromguild, config
+from utils import prettysend, config, load_json, write_json
 
 config = config()
 api = Api(api_key=os.environ['yt_api_key'])
@@ -22,7 +22,7 @@ def isNewVideo(channelid):
 	return acts != prev_acts
 
 def guildChannelId(guildid):
-	guilds = json.load(open('data/guilds.json', 'r'))
+	guilds = load_json("data/guilds.json")
 	with guilds[f"{guildid}"]["channelid"] as gcid:
 		if f"{guildid}" in guilds:
 			if gcid != "":
@@ -31,13 +31,13 @@ def guildChannelId(guildid):
 			return None
 
 async def setchannelid(self, ctx, channelId=""):
-	guilds = json.load(open('data/guilds.json', 'r'))
+	guilds = load_json('data/guilds.json')
 	if not guilds[f"{ctx.guild.id}"]:
 		guilds[f"{ctx.guild.id}"] = config["defaultguild"]
 		guilds["{ctx.guild.id}"]["channelid"] = "channelid"
 	else:
 		guilds[f"{ctx.guild.id}"]["channelid"] = channelId
-	json.dump(guilds, open('data/guilds.json', 'w'),indent=4)
+	write_json('data/guilds.json', guilds)
 	if channelId == "":
 		await prettysend(ctx, "Disconnected YouTube Channel!")
 	else:
@@ -56,7 +56,7 @@ class Youtube(commands.Cog):
 	
 @tasks.loop(minutes=10)
 async def repeat(self):
-	guilds = json.load(open('data/guilds.json', 'r'))
+	guilds = load_json('data/guilds.json')
 	for guild in self.bot.guilds:
 		if f"{guild.id}" in guilds and guilds[f"{guild.id}"]["channelid"] != "":
 			channelid = guilds[f"{guild.id}"]["channelid"]
