@@ -1,24 +1,14 @@
 import discord, json, traceback, os
-from discord.ext.commands import AutoShardedBot
-try:
-	from pyyoutube import Api
-except:
-	os.system("pip install --upgrade python-youtube")
-	from pyyoutube import Api
+from pyyoutube import Api
 
 api = Api(api_key=os.environ['yt_api_key'])
 
-class Bot(AutoShardedBot):
-    def __init__(self, *args, prefix=None, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.prefix = prefix
-
-def isPremium(guildid):
+def getinfofromguild(guildid, key):
 	guilds = json.load(open('data/guilds.json', 'r'))
 	if f"{guildid}" in guilds:
-		return guilds[f"{guildid}"]["premium"] == True
+		return guilds[f"{guildid}"][key]
 	else:
-		return False
+		return
 
 def config(filename: str = "data/config"):
     try:
@@ -26,6 +16,13 @@ def config(filename: str = "data/config"):
             return json.load(data)
     except FileNotFoundError:
         raise FileNotFoundError("JSON file wasn't found")
+
+async def determine_prefix(bot, message):
+	try:
+		prefixes = json.load(open('data/guilds.json', 'r'))
+		return [prefixes[f"{message.guild.id}"]["prefix"],"$"]
+	except:
+		return config["prefix"]
 
 async def prettysend(ctx, text):
 	embed = discord.Embed(

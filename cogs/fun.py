@@ -1,6 +1,6 @@
 import discord, os, random, asyncpraw, requests, json
 from discord.ext import commands
-from utils import isPremium, prettysend
+from utils import getinfofromguild, prettysend
 
 reddit = asyncpraw.Reddit(
     client_id=os.environ['reddit_id'],
@@ -49,7 +49,7 @@ class Fun(commands.Cog):
 	@commands.command(help="post a meme!")
 	async def meme(self, ctx, sub="memes"):
 		sub.replace("r/","")
-		if not isPremium(ctx.guild.id) and sub != "memes":
+		if not isPremium(ctx.guild.id, "premium") and sub != "memes":
 			sub = "memes"
 			await ctx.reply("Custom subreddits require premium! In the meantime, enjoy a meme from r/memes")
 		subreddit = await reddit.subreddit(sub, fetch=True)
@@ -58,6 +58,7 @@ class Fun(commands.Cog):
 			return
 		meme = await subreddit.random()
 		if meme.over_18:
+			await meme(self, ctx, sub)
 			return
 		embed = discord.Embed(title=meme.title,color=0xe74c3c)
 		embed.set_image(url=meme.url)

@@ -59,7 +59,7 @@ class Info(commands.Cog):
 				embed.set_thumbnail(url=ctx.guild.icon_url)
 			if ctx.guild.banner:
 				embed.set_image(url=ctx.guild.banner_url_as(format="png"))
-
+			embed.set_author(name=f"{ctx.guild.name}",icon_url=ctx.guild.icon_url)
 			embed.add_field(name="Server Name", value=ctx.guild.name, inline=True)
 			embed.add_field(name="Server ID", value=ctx.guild.id, inline=True)
 			embed.add_field(name="Members", value=ctx.guild.member_count, inline=True)

@@ -1,13 +1,14 @@
 import discord, json
 from discord.ext import commands
-from utils import prettysend
+from utils import prettysend, config
 from cogs import youtube as yt
 
-class Config(commands.Cog):
+class Settings(commands.Cog):
 	"""Configure the bot - Admin only"""
 
 	def __init__(self, bot):
 		self.bot = bot
+		self.config = config
 
 	@commands.command(help="set a prefix")
 	@commands.guild_only()
@@ -15,7 +16,8 @@ class Config(commands.Cog):
 	async def setprefix(self, ctx, prefix="$"):
 		guilds = json.load(open('data/guilds.json', 'r'))
 		if not guilds[f"{ctx.guild.id}"]:
-			guilds[f"{ctx.guild.id}"] = {"prefix":prefix,"premium":False,"channelid":"","isLevels":True}
+			guilds[f"{ctx.guild.id}"] = config["defaultguild"]
+			guilds[f"{ctx.guild.id}"]["prefix"] = prefix
 		else:
 			guilds[f"{ctx.guild.id}"]["prefix"] = prefix
 		json.dump(guilds, open('data/guilds.json', 'w'), indent=4)
@@ -27,7 +29,7 @@ class Config(commands.Cog):
 	async def togglelevels(self, ctx):
 		guilds = json.load(open('data/guilds.json', 'r'))
 		if not guilds[f"{ctx.guild.id}"]:
-			guilds[f"{ctx.guild.id}"] = {"prefix":"$","premium":False,"channelid":"","isLevels":False}
+			guilds[f"{ctx.guild.id}"] = config["defaultguild"]
 		else:
 			isEnabled = guilds[f"{ctx.guild.id}"]["isLevels"] == False
 
@@ -44,4 +46,4 @@ class Config(commands.Cog):
 		yt.setchannelid(self, ctx, channelid="")
 
 def setup(bot):
-	bot.add_cog(Config(bot))
+	bot.add_cog(Settings(bot))

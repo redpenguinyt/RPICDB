@@ -26,8 +26,7 @@ Hey there! Do you want a discord bot that adds a bunch of useless features, like
 * `$reverse <text>` - reverse some text
 * `$rickroll` - post a rickroll!
 
-#### General
-* `$invite <user>` - invite a user via DMs
+#### User suggestions
 * `$wheretofindtoxicwaste` - where to hide toxic waste
 
 #### Info

@@ -59,8 +59,10 @@ class Events(commands.Cog):
 		embed.timestamp = datetime.utcnow()
 		await channel.send(embed=embed)
 		await member.send(f'Welcome to {member.guild.name}! We hope you enjoy the server')
-		await member.add_roles(
-			discord.utils.get(member.guild.roles, name="Member"))
+
+		role = discord.utils.get(member.guild.roles, name="Member")
+		if role:
+			await member.add_roles(role)
 
 	@commands.Cog.listener()
 	async def on_command(self, ctx):

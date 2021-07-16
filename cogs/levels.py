@@ -51,7 +51,7 @@ class Levels(commands.Cog):
 			await level_up(msg.author, msg)
 	
 	@commands.command(help="Give XP to a user")
-	@commands.has_permissions(manage_messages=True)
+	@commands.is_owner()
 	async def givexp(self, ctx, amount=100, user: discord.User=None):
 		if not user:
 			user = ctx.message.author

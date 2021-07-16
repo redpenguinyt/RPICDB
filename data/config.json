@@ -1,12 +1,19 @@
 {
+	"description":"Red Penguin Is Cool Discord Bot",
     "owners": [
         666323445453291561
     ],
+	"defaultguild":{
+		"prefix":"",
+		"premium":false,
+		"channelid":"",
+		"isLevels":true
+	},
     "prefix": "$",
     "activity": "$help",
     "activity_type": "playing",
     "status_type": "online",
-    "version": "0.2.7",
+    "version": "0.3.2",
     "lvlmultiplier": 50,
     "debug": true
 }
