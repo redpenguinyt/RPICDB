@@ -23,7 +23,7 @@ Hey there! Do you want a discord bot that adds a bunch of useless features, like
 * `$compliment <user>` - send a compliment to a user
 * `$inspire` - get an inspirational quote!
 * `$meme [subreddit]` - Post a meme from any subreddit! Gets memes from [r/memes](https://reddit.com/r/memes) by default
-* `$poop` - posts poop
+* `$poop` - posts some poop
 * `$reverse <text>` - reverse some text
 * `$rickroll` - post a rickroll!
 
