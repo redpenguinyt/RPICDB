@@ -1,4 +1,4 @@
-import random, json, asyncpraw, os
+import random, asyncpraw, os
 from discord.ext import commands
 from utils import prettysend
 
@@ -21,7 +21,7 @@ class Suggested(commands.Cog):
 		where = f"https://www.google.com/maps/@{randomx},{randomy},10z"
 		await prettysend(ctx, f"Here: {where}")
 	
-	@commands.command(help="Get a question")
+	@commands.command(help="Get a random question")
 	async def randomquestion(self, ctx):
 		subreddit = await reddit.subreddit("AskReddit", fetch=True)
 		question = await subreddit.random()
