@@ -17,7 +17,7 @@ class Info(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
-	@commands.command(aliases=["level","user"],help="get info about a user or yourself!")
+	@commands.command(aliases=["level","user","p"],help="get info about a user or yourself!")
 	@commands.guild_only()
 	async def userinfo(self, ctx, user: discord.Member=None):
 		if user is None:

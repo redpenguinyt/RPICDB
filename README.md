@@ -29,6 +29,7 @@ Hey there! Do you want a discord bot that adds a bunch of useless features, like
 
 #### Suggested
 * `$wheretofindtoxicwaste` - where to hide toxic waste
+* `$randomquestion` - get a random question to keep the conversation going!
 
 #### Info
 * `$ping [user]` - get a user's ping
