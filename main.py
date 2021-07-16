@@ -18,8 +18,6 @@ bot = commands.Bot(
 	intents=discord.Intents(guilds=True, members=True, messages=True)
 )
 
-
-
 # Load all cogs
 for file in os.listdir("cogs"):
     if file.endswith(".py"):

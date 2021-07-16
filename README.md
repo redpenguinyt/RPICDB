@@ -16,17 +16,18 @@ Hey there! Do you want a discord bot that adds a bunch of useless features, like
 * `$setchannelid <youtube channel id>` - set a YT channel id to get YouTube notifications!
 * `$setprefix <prefix>` - set a custom prefix for your bot!
 * `$togglelevels` - toggle the levelling system in that guild!
+* `$togglewelcome` - toggle the welcome message in that guild!
 
 #### Fun
 * `$choose [things]` - randomly choose between different things!
 * `$compliment <user>` - send a compliment to a user
 * `$inspire` - get an inspirational quote!
 * `$meme [subreddit]` - Post a meme from any subreddit! Gets memes from [r/memes](https://reddit.com/r/memes) by default
-* `$poop` - poop ASCII
+* `$poop` - posts poop
 * `$reverse <text>` - reverse some text
 * `$rickroll` - post a rickroll!
 
-#### User suggestions
+#### Suggested
 * `$wheretofindtoxicwaste` - where to hide toxic waste
 
 #### Info
