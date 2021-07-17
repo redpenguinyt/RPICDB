@@ -46,7 +46,7 @@ class Info(commands.Cog):
 
 		await ctx.reply(embed=embed)
 
-	@commands.command(help="get info about a server",aliases=["server"])
+	@commands.command(help="get info about a server",aliases=["server","s"])
 	@commands.guild_only()
 	async def serverinfo(self, ctx):
 		""" Check info about current server """

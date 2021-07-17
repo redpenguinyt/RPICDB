@@ -76,7 +76,7 @@ class Fun(commands.Cog):
 
 		await ctx.send(embed=embed)
 		
-	@commands.command(help="reverse whatever you say!")
+	@commands.command(help="reverse whatever you say!", aliases=["r"])
 	async def reverse(self, ctx, *, message):
 		await prettysend(ctx, message[::-1])
 
@@ -84,7 +84,7 @@ class Fun(commands.Cog):
 	async def inspire(self, ctx):
 		await prettysend(ctx, get_quote())
 
-	@commands.command(help="compliment someone!")
+	@commands.command(help="compliment someone!", aliases=["c"])
 	async def compliment(self, ctx, target):
 		await ctx.send(random.choice(hapwrds) % target)
 	
