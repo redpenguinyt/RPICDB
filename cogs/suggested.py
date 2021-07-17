@@ -14,19 +14,18 @@ class Suggested(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 	
-	@commands.command(help="Check where to hide toxic waste")
+	@commands.command(help="Where to hide toxic waste", aliases=["wthtw"])
 	async def wheretohidetoxicwaste(self, ctx):
 		randomx = random.randint(-160,160)
 		randomy = random.randint(-160,160)
 		where = f"https://www.google.com/maps/@{randomx},{randomy},10z"
 		await prettysend(ctx, f"Here: {where}")
 	
-	@commands.command(help="Get a random question")
+	@commands.command(help="Get a random question", aliases=["rq"])
 	async def randomquestion(self, ctx):
 		subreddit = await reddit.subreddit("AskReddit", fetch=True)
 		question = await subreddit.random()
 		if question.over_18:
-			await randomquestion(self, ctx)
 			return
 		await prettysend(ctx, question.title)
 

@@ -1,14 +1,21 @@
 import discord, os
-# from pretty_help import PrettyHelp
 from utils import config, determine_prefix
 from keep_alive import keep_alive
 from discord.ext import commands
 
 config = config()
 
+class MyHelpCommand(commands.MinimalHelpCommand):
+    async def send_pages(self):
+        destination = self.get_destination()
+        e = discord.Embed(color=discord.Color.blurple(), description='')
+        for page in self.paginator.pages:
+            e.description += page
+        await destination.send(embed=e)
+
 bot = commands.Bot(
     command_prefix=determine_prefix,
-#	help_command=PrettyHelp(),
+	help_command = MyHelpCommand(),
 	description="",
 	case_insensitive=True,
 	owner_ids=config["owners"],
