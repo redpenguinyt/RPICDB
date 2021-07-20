@@ -117,13 +117,12 @@ class Moderation(commands.Cog):
     async def unmute(self, ctx, user: Redeemed):
         await user.remove_roles(
             discord.utils.get(ctx.guild.roles, name="Muted"))
-        await ctx.send(f"{user.mention} has been unmuted", delete_after=3.0)
+        await prettysend(ctx, f"{user.mention} has been unmuted")
 
     @commands.command(help="Warn a user for being bad")
     @commands.guild_only()
     async def warn(self, ctx, member: discord.Member, *, reason="treason"):
-        await prettysend(ctx, f"{member.mention} has been warned for {reason}"
-                               )
+        await prettysend(ctx, f"{member.mention} has been warned for {reason}")
         await member.send(f"You have been warned for {reason}")
 
     @commands.command(help="block a user from the current channel")

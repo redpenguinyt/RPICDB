@@ -34,7 +34,7 @@ async def prettysend(ctx, text):
 		title = text,
 		color=0xe74c3c
 	)
-	await ctx.reply(embed=embed)
+	await ctx.send(embed=embed)
 
 def traceback_maker(err, advance: bool = True):
     _traceback = ''.join(traceback.format_tb(err.__traceback__))
