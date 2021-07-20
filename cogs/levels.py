@@ -1,6 +1,6 @@
 import discord, random
 from discord.ext import commands
-from utils import config, load_json
+from utils import config, load_json, prettysend
 from replit import db
 
 config = config()
@@ -13,10 +13,13 @@ def update_data(user: discord.User):
 def add_xp(user: discord.User, exp):
 	db["users"][f"{user.id}"]['xp'] += exp
 
+def remove_xp(user: discord.User, exp):
+	db["users"][f"{user.id}"]["xp"] -= exp
 
 async def level_up(user: discord.User, msg):
 	xp = db["users"][f"{user.id}"]['xp']
 	lvl = db["users"][f"{user.id}"]['level']
+	old_lvl = lvl
 	lvl_lmt = lvl * config["lvlmultiplier"]
 	while xp >= lvl_lmt:
 		db["users"][f"{user.id}"]['level'] = lvl + 1
@@ -24,7 +27,9 @@ async def level_up(user: discord.User, msg):
 		xp = xp - lvl_lmt
 		lvl = lvl + 1
 		lvl_lmt = lvl * config["lvlmultiplier"]
-		await msg.channel.send(f"GG, {user.mention}! You\'ve leveled up to level {lvl + 1}")
+	if lvl != old_lvl:
+		await prettysend(msg.channel, "Level Up!", f"GG, {user.mention}! You\'ve leveled up to level {lvl + 1}")
+	
 class Levels(commands.Cog):
 	"""Levels"""
 
@@ -62,12 +67,24 @@ class Levels(commands.Cog):
 
 		await ctx.reply(f"Gave {amount} XP to {user.mention}")
 	
+	@commands.command(help="Give XP to a user")
+	@commands.is_owner()
+	async def takexp(self, ctx, amount=100, user: discord.User=None):
+		if not user:
+			user = ctx.message.author
+
+		update_data(user)
+		remove_xp(user, amount)
+		await level_up(user, ctx)
+
+		await ctx.reply(f"Gave {amount} XP to {user.mention}")
+
 	@commands.command(help="Check the levelling leaderboard")
 	@commands.guild_only()
 	async def top(self, ctx):
 		users = db["users"]
 		topusers = sorted(users.items(), key= lambda x: (x[1]['level'], x[1]['xp']), reverse=True)[:5]
-		tosend = "Top level members: \n"
+		tosend = ""
 		i = 0
 		for user in topusers:
 			try:
@@ -77,7 +94,7 @@ class Levels(commands.Cog):
 			except:
 				tosend += f"`{i+1}. No user found` \n"
 			i += 1
-		await ctx.send(tosend)
+		await prettysend(ctx, "Top level members", tosend)
 
 def setup(bot):
     bot.add_cog(Levels(bot))

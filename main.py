@@ -20,8 +20,6 @@ bot = commands.Bot(
 	case_insensitive=True,
 	owner_ids=config["owners"],
 	command_attrs=dict(hidden=True),
-    allowed_mentions=discord.AllowedMentions(
-		roles=True, users=True, everyone=False),
 	intents=discord.Intents(guilds=True, members=True, messages=True)
 )
 

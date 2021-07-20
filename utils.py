@@ -1,4 +1,4 @@
-import discord, json, traceback, os
+import discord, json, traceback
 
 def load_json(filename):
     with open(filename, encoding='utf-8') as infile:
@@ -29,11 +29,13 @@ async def determine_prefix(bot, message):
 	except:
 		return config["prefix"]
 
-async def prettysend(ctx, text):
+async def prettysend(ctx, text, description=None):
 	embed = discord.Embed(
 		title = text,
 		color=0xe74c3c
 	)
+	if description:
+		embed.description = description
 	await ctx.send(embed=embed)
 
 def traceback_maker(err, advance: bool = True):
