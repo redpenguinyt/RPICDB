@@ -8,7 +8,7 @@ reddit = asyncpraw.Reddit(
     user_agent=os.environ['reddit_user_agent'],
 )
 
-hapwrds = [  # List of encouragements
+compliments = [  # List of encouragements
     "%s is amazing!",
 	"Round of applause for %s",
 	"You are a great person, %s",
@@ -31,7 +31,7 @@ class Fun(commands.Cog):
 
 	@commands.command(help="poop")
 	async def poop(self, ctx):
-		await ctx.send("""
+		await prettysend(ctx, "Poop", """
 ░░░░░░░░░░░█▀▀░░█░░░░░░
 ░░░░░░▄▀▀▀▀░░░░░█▄▄░░░░
 ░░░░░░█░█░░░░░░░░░░▐░░░
@@ -86,7 +86,7 @@ class Fun(commands.Cog):
 
 	@commands.command(help="compliment someone!", aliases=["c"])
 	async def compliment(self, ctx, target):
-		await ctx.send(random.choice(hapwrds) % target)
+		await prettysend(ctx, "", random.choice(compliments) % target)
 	
 	@commands.command(help="RPICDB will help you choose something!")
 	async def choose(self, ctx, *, things="yes no"):
