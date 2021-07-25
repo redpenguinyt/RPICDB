@@ -27,7 +27,14 @@ async def level_up(user: discord.User, msg):
 		lvl = lvl + 1
 		lvl_lmt = lvl * config["lvlmultiplier"]
 	if lvl != old_lvl:
-		await prettysend(msg.channel, "Level Up!", f"GG, {user.mention}! You\'ve leveled up to level {lvl + 1}")
+		embed = discord.Embed(
+			title = "Level Up!",
+			description = f"GG, {user.mention}! You\'ve leveled up to level {lvl}",
+			color=0xe74c3c
+		)
+		embed.set_thumbnail(url=user.avatar_url)
+		await msg.channel.send(embed=embed)
+		
 	
 class Levels(commands.Cog):
 	"""Levels"""
