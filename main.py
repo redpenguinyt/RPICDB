@@ -8,7 +8,11 @@ config = config()
 class MyHelpCommand(commands.MinimalHelpCommand):
     async def send_pages(self):
         destination = self.get_destination()
-        e = discord.Embed(color=discord.Color.blurple(), description='')
+        description = "If there is a problem, please join the support server: https://discord.gg/C9E5EqaHR8\n"
+        e = discord.Embed(
+			color=0xe74c3c,
+			description=description
+		)
         for page in self.paginator.pages:
             e.description += page
         await destination.send(embed=e)

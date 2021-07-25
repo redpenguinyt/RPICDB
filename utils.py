@@ -8,13 +8,6 @@ def write_json(filename, contents):
     with open(filename, 'w') as outfile:
         json.dump(contents, outfile, ensure_ascii=True, indent=4)
 
-def getinfofromguild(guildid, key):
-	guilds = json.load(open('data/guilds.json', 'r'))
-	if f"{guildid}" in guilds:
-		return guilds[f"{guildid}"][key]
-	else:
-		return
-
 def config(filename: str = "data/config"):
     try:
         with open(f"{filename}.json", encoding='utf8') as data:
@@ -22,10 +15,18 @@ def config(filename: str = "data/config"):
     except FileNotFoundError:
         raise FileNotFoundError("JSON file wasn't found")
 
+def getinfofromguild(guildid, key):
+	guilds = json.load(open('data/guilds.json', 'r'))
+	config = json.load(open('data/config.json', 'r'))
+	if f"{guildid}" in guilds:
+		return guilds[f"{guildid}"][key]
+	else:
+		return config["defaultguild"][key]
+
 async def determine_prefix(bot, message):
 	try:
 		prefixes = json.load(open('data/guilds.json', 'r'))
-		return [prefixes[f"{message.guild.id}"]["prefix"],"$"]
+		return prefixes[f"{message.guild.id}"]["prefix"]
 	except:
 		return config["prefix"]
 

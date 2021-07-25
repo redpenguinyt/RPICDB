@@ -43,6 +43,15 @@ class Events(commands.Cog):
 			pass
 
 	@commands.Cog.listener()
+	async def on_message(self, msg):
+		if f"<@!{self.bot.user.id}>" in msg.content and "prefix" in msg.content.lower():
+			try:
+				prefix = getinfofromguild(msg.guild.id, "prefix")
+			except:
+				prefix = config["prefix"]
+			await msg.channel.send(f"My prefix is {prefix}")
+
+	@commands.Cog.listener()
 	async def on_member_join(self, member: discord.Member):
 		if not getinfofromguild(member.guild.id, "isWelcome"):
 			return

@@ -9,7 +9,6 @@ def update_data(user: discord.User):
 	if not f"{user.id}" in db["users"]:
 		db["users"][f"{user.id}"] = {"xp":0,"level":1}
 
-
 def add_xp(user: discord.User, exp):
 	db["users"][f"{user.id}"]['xp'] += exp
 
