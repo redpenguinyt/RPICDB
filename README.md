@@ -33,6 +33,7 @@ Hey there! Do you want a discord bot that adds a bunch of useless features, like
 
 #### Info
 * `$ping [user]` - get a user's ping
+* `$servercount` - checks how many users are in the server
 * `$serverinfo` - get info about the server!
 * `$userinfo [user]` - get info about a user!
 

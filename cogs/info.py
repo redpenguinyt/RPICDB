@@ -17,6 +17,11 @@ class Info(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
+	@commands.command(aliases=["sc"], help="checks how many users are in the server")
+	@commands.guild_only()
+	async def servercount(self, ctx):
+		await prettysend(ctx, f"There are {ctx.guild.member_count} users in {ctx.guild.name}")
+
 	@commands.command(aliases=["level","user","p"],help="get info about a user or yourself!")
 	@commands.guild_only()
 	async def userinfo(self, ctx, user: discord.Member=None):
