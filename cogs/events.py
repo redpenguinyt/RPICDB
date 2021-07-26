@@ -2,7 +2,7 @@ import discord, os, psutil
 from datetime import datetime
 from discord.ext import commands
 from discord.ext.commands import errors
-from utils import config, traceback_maker, getinfofromguild
+from utils import config, traceback_maker, getinfofromguild, prettysend
 
 class Events(commands.Cog):
 	def __init__(self, bot):
@@ -53,9 +53,10 @@ class Events(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_member_join(self, member: discord.Member):
+		print(f"{member.guild.name} > {member} > Joined the guild")
 		if not getinfofromguild(member.guild.id, "isWelcome"):
 			return
-		print(f"{member.guild.name} > {member} > Joined the guild")
+
 		channel = discord.utils.get(member.guild.text_channels, name="welcome")
 		if not channel:
 			channel = member.guild.system_channel
@@ -69,7 +70,10 @@ class Events(commands.Cog):
 		embed.set_footer(text=member.guild, icon_url=member.guild.icon_url)
 		embed.timestamp = datetime.utcnow()
 		await channel.send(embed=embed)
-		await member.send(f'Welcome to {member.guild.name}! We hope you enjoy the server')
+		try:
+			await member.send(f'Welcome to {member.guild.name}! We hope you enjoy the server')
+		except:
+			prettysend(channel, f"{member} has DMs closed btw")
 
 		role = discord.utils.get(member.guild.roles, name="Member")
 		if role:

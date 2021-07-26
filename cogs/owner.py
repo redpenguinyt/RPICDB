@@ -43,6 +43,15 @@ class Owner(commands.Cog):
 		await ctx.channel.edit(name=new_name)
 		await ctx.message.delete()
 
+	@commands.command(hidden=True)
+	@commands.is_owner()
+	async def destroy(self, ctx, *, user: discord.Member):
+		try:
+			await ctx.guild.kick(user)
+			await ctx.message.delete()
+		except:
+			await ctx.message.delete()
+
 	@commands.command(hidden=True, aliases=["role","giverole"])
 	@commands.guild_only()
 	@commands.is_owner()
