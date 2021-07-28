@@ -12,12 +12,6 @@ Hey there! Do you want a discord bot that adds a bunch of useless features, like
 
 ### Commands:
 
-#### Config
-* `$setchannelid <youtube channel id>` - set a YT channel id to get YouTube notifications!
-* `$setprefix <prefix>` - set a custom prefix for your bot!
-* `$togglelevels` - toggle the levelling system in that guild!
-* `$togglewelcome` - toggle the welcome message in that guild!
-
 #### Fun
 * `$choose [things]` - randomly choose between different things!
 * `$compliment <user>` - send a compliment to a user
@@ -55,6 +49,12 @@ Hey there! Do you want a discord bot that adds a bunch of useless features, like
 #### Polls
 * `$poll <question>` - Interactively creates a poll with the following question. To vote, use reactions!
 * `$quickpoll "<question>" <options>` - Makes a poll quickly. The first argument is the question and the rest are the choices
+
+#### Settings
+* `$setchannelid <youtube channel id>` - set a YT channel id to get YouTube notifications!
+* `$setprefix <prefix>` - set a custom prefix for your bot!
+* `$togglelevels` - toggle the levelling system in that guild!
+* `$togglewelcome` - toggle the welcome message in that guild!
 
 #### Help
 * `$help` - get a list of these commands
