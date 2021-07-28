@@ -2,19 +2,17 @@ import discord
 from discord.ext import commands
 from utils import prettysend, config, load_json, write_json
 from cogs import youtube as yt
+from replit import db
 
 async def toggleguildsetting(self, ctx, setting, userFriendlyName=""):
-	guilds = load_json('data/guilds.json')
-	if not guilds[f"{ctx.guild.id}"]:
-		guilds[f"{ctx.guild.id}"] = config["defaultguild"]
-		guilds[f"{ctx.guild.id}"] = config["defaultguild"]
-	else:
-		isEnabled = guilds[f"{ctx.guild.id}"][setting] == False
+	if not db["guilds"][f"{ctx.guild.id}"]:
+		db["guilds"][f"{ctx.guild.id}"] = config["defaultguild"]
+	
+	isEnabled = db["guilds"][f"{ctx.guild.id}"][setting] == False
 
-	guilds[f"{ctx.guild.id}"][setting] = isEnabled
-	write_json('data/guilds.json',guilds)
+	db["guilds"][f"{ctx.guild.id}"][setting] = isEnabled
 
-	newPreference = guilds[f"{ctx.guild.id}"][setting]
+	newPreference = db["guilds"][f"{ctx.guild.id}"][setting]
 	await prettysend(ctx, f"{userFriendlyName} Setting changed to {newPreference}!")
 
 class Settings(commands.Cog):
@@ -28,13 +26,9 @@ class Settings(commands.Cog):
 	@commands.guild_only()
 	@commands.has_permissions(administrator=True)
 	async def setprefix(self, ctx, prefix="$"):
-		guilds = load_json("data/guilds.json")
-		if not guilds[f"{ctx.guild.id}"]:
-			guilds[f"{ctx.guild.id}"] = config["defaultguild"]
-			guilds[f"{ctx.guild.id}"]["prefix"] = prefix
-		else:
-			guilds[f"{ctx.guild.id}"]["prefix"] = prefix
-		write_json('data/guilds.json',guilds)
+		if not db["guilds"][f"{ctx.guild.id}"]:
+			db["guilds"][f"{ctx.guild.id}"] = config["defaultguild"]
+			db["guilds"][f"{ctx.guild.id}"]["prefix"] = prefix
 		await prettysend(ctx, "Prefix set!")
 	
 	@commands.command(help="enable/disable the levelling system")

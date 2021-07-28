@@ -1,6 +1,6 @@
 import discord, random
 from discord.ext import commands
-from utils import config, load_json, prettysend
+from utils import config, prettysend, getinfofromguild
 from replit import db
 
 config = config()
@@ -52,10 +52,8 @@ class Levels(commands.Cog):
 		guild = msg.guild
 		if not guild:
 			return
-		guilds = load_json("data/guilds.json")
 		isLevels = True
-		if f"{guild.id}" in guilds:
-			isLevels = guilds[f"{guild.id}"]["isLevels"]
+		isLevels = getinfofromguild(msg.guild.id, "isLevels")
 		if not msg.author.bot and isLevels:
 			update_data(msg.author)
 			add_xp(msg.author, random.randint(3,8))

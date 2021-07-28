@@ -8,7 +8,8 @@
 		"premium":false,
 		"channelid":"",
 		"isLevels":true,
-		"isWelcome":true
+		"isWelcome":true,
+		"users":{}
 	},
     "prefix": "$",
     "activity": "$help",

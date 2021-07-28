@@ -2,7 +2,7 @@ import discord, os
 from discord.ext import commands, tasks
 from replit import db
 from pyyoutube import Api
-from utils import prettysend, config, load_json, write_json
+from utils import prettysend, config
 
 config = config()
 api = Api(api_key=os.environ['yt_api_key'])
@@ -22,7 +22,7 @@ def isNewVideo(channelid):
 	return acts != prev_acts
 
 def guildChannelId(guildid):
-	guilds = load_json("data/guilds.json")
+	guilds = db["guilds"]
 	with guilds[f"{guildid}"]["channelid"] as gcid:
 		if f"{guildid}" in guilds:
 			if gcid != "":
@@ -31,18 +31,19 @@ def guildChannelId(guildid):
 			return None
 
 async def setchannelid(self, ctx, channelId=""):
-	guilds = load_json('data/guilds.json')
-	if not guilds[f"{ctx.guild.id}"]:
-		guilds[f"{ctx.guild.id}"] = config["defaultguild"]
-		guilds["{ctx.guild.id}"]["channelid"] = "channelid"
-	else:
-		guilds[f"{ctx.guild.id}"]["channelid"] = channelId
-	write_json('data/guilds.json', guilds)
 	if channelId == "":
 		await prettysend(ctx, "Disconnected YouTube Channel!")
 	else:
-		channel = getytchannel(channelId)["snippet"]["title"]
+		try:
+			channel = getytchannel(channelId)["snippet"]["title"]
+		except:
+			await prettysend(ctx, "No channel found!")
 		await prettysend(ctx, f"Connected to {channel}!")
+	if not db["guilds"][f"{ctx.guild.id}"]:
+		db["guilds"][f"{ctx.guild.id}"] = config["defaultguild"]
+		db["guilds"]["{ctx.guild.id}"]["channelid"] = channelId
+	else:
+		db["guilds"][f"{ctx.guild.id}"]["channelid"] = channelId
 
 class Youtube(commands.Cog):
 	"""Youtube upload commands"""
@@ -56,10 +57,9 @@ class Youtube(commands.Cog):
 	
 @tasks.loop(minutes=10)
 async def repeat(self):
-	guilds = load_json('data/guilds.json')
 	for guild in self.bot.guilds:
-		if f"{guild.id}" in guilds and guilds[f"{guild.id}"]["channelid"] != "":
-			channelid = guilds[f"{guild.id}"]["channelid"]
+		if f"{guild.id}" in db["guilds"] and db["guilds"][f"{guild.id}"]["channelid"] != "":
+			channelid = db["guilds"][f"{guild.id}"]["channelid"]
 			channel = getytchannel(channelid)
 			channelname = channel["snippet"]["title"]
 			if isNewVideo(channelid):
@@ -69,7 +69,9 @@ async def repeat(self):
 				discordchannel = discord.utils.get(guild.text_channels, name="yt-uploads")
 				if not channel:
 					discordchannel = guild.system_channel
-				await discordchannel.send(f"**{channelname}** uploaded a new video! https://www.youtube.com/watch?v={videoId} @everyone")
+				sent = await discordchannel.send(f"**{channelname}** uploaded a new video! https://www.youtube.com/watch?v={videoId} @everyone")
+				try: sent.publish()
+				except: pass
 
 def setup(bot):
     bot.add_cog(Youtube(bot))

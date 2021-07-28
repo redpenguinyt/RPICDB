@@ -1,6 +1,10 @@
 import discord, json, traceback
+from replit import db
 
 def load_json(filename):
+    if filename == "data/guilds.json":
+        print("Something is trying to use guilds.json")
+        return db["guilds"]
     with open(filename, encoding='utf-8') as infile:
         return json.load(infile)
 
@@ -16,8 +20,8 @@ def config(filename: str = "data/config"):
         raise FileNotFoundError("JSON file wasn't found")
 
 def getinfofromguild(guildid, key):
-	guilds = json.load(open('data/guilds.json', 'r'))
-	config = json.load(open('data/config.json', 'r'))
+	guilds = db["guilds"]
+	config = load_json("data/config.json")
 	if f"{guildid}" in guilds:
 		return guilds[f"{guildid}"][key]
 	else:
@@ -25,10 +29,9 @@ def getinfofromguild(guildid, key):
 
 async def determine_prefix(bot, message):
 	try:
-		prefixes = json.load(open('data/guilds.json', 'r'))
-		return prefixes[f"{message.guild.id}"]["prefix"]
+		return getinfofromguild(message.guild.id,"prefix")
 	except:
-		return config["prefix"]
+		return config()["prefix"]
 
 async def prettysend(ctx, text, description=None):
 	embed = discord.Embed(
