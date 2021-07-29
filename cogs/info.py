@@ -28,8 +28,8 @@ class Info(commands.Cog):
 		if user is None:
 			user = ctx.message.author
 		userinfo = {"level":1,"xp":0}
-		if f"{user.id}" in db["users"]:
-			userinfo = db["users"][f"{user.id}"]
+		if f"{user.id}" in db["guilds"][f"{ctx.guild.id}"]["users"]:
+			userinfo = db["guilds"][f"{ctx.guild.id}"]["users"][f"{user.id}"]
 		lvl = userinfo['level']
 		xp = userinfo["xp"]
 		lvl_lmt = lvl * config["lvlmultiplier"]

