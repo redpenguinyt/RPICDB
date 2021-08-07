@@ -48,22 +48,23 @@ class Fun(commands.Cog):
 
 	@commands.command(help="post a meme!")
 	async def meme(self, ctx, sub="memes"):
-		sub.replace("r/","")
-		if not getinfofromguild(ctx.guild.id, "premium") and sub != "memes":
-			sub = "memes"
-			await ctx.reply("Custom subreddits require premium! In the meantime, enjoy a meme from r/memes")
-		subreddit = await reddit.subreddit(sub, fetch=True)
-		if subreddit.over18:
-			ctx.reply("BONK no horny")
-			return
-		meme = await subreddit.random()
-		if meme.over_18:
-			await meme(self, ctx, sub)
-			return
-		embed = discord.Embed(title=meme.title,color=0xe74c3c)
-		embed.set_image(url=meme.url)
-		embed.set_footer(text=f"Credit to u/{meme.author.name}")
-		await ctx.send(embed=embed)
+		async with ctx.channel.typing():
+			sub.replace("r/","")
+			if not getinfofromguild(ctx.guild.id, "premium") and sub != "memes":
+				sub = "memes"
+				await ctx.reply("Custom subreddits require premium! In the meantime, enjoy a meme from r/memes")
+			subreddit = await reddit.subreddit(sub, fetch=True)
+			if subreddit.over18:
+				ctx.reply("BONK no horny")
+				return
+			meme = await subreddit.random()
+			if meme.over_18:
+				await ctx.reinvoke()
+				return
+			embed = discord.Embed(title=meme.title,color=0xe74c3c)
+			embed.set_image(url=meme.url)
+			embed.set_footer(text=f"Credit to u/{meme.author.name}")
+			await ctx.channel.send(embed=embed)
 	
 	@commands.command(help='Rickroll!')
 	async def rickroll(self, ctx):

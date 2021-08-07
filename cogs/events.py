@@ -24,8 +24,8 @@ class Events(commands.Cog):
 			if "2000 or fewer" in str(err) and len(ctx.message.clean_content) > 1900:
 				return await ctx.send(
 					"You attempted to make the command display more than 2,000 characters...\n"
-                    "Both error and command will be ignored."
-                )
+					"Both error and command will be ignored."
+				)
 
 			await ctx.send("There was an error processing the command ;-; ")
 			if self.config["debug"]:
@@ -107,6 +107,7 @@ class Events(commands.Cog):
 		)
 
 		print(f"Ready: {self.bot.user} | Servers: {len(self.bot.guilds)}")
+#		print(self.bot.guilds)
 
 def setup(bot):
 	bot.add_cog(Events(bot))
