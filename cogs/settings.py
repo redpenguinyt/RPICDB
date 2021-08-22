@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from utils import prettysend, config, load_json, write_json
+from utils import prettysend, config
 from cogs import youtube as yt
 from replit import db
 
@@ -16,7 +16,7 @@ async def toggleguildsetting(self, ctx, setting, userFriendlyName=""):
 	await prettysend(ctx, f"{userFriendlyName} Setting changed to {newPreference}!")
 
 class Settings(commands.Cog):
-	"""Configure the bot - Admin only"""
+	"""Configure the bot - Administrator only"""
 
 	def __init__(self, bot):
 		self.bot = bot
@@ -48,6 +48,17 @@ class Settings(commands.Cog):
 	@commands.has_permissions(administrator=True)
 	async def setchannelid(self, ctx, channelid=""):
 		yt.setchannelid(self, ctx, channelid="")
+	
+	@commands.command(help="Check your guild's settings")
+	@commands.guild_only()
+	async def settings(self, ctx):
+		guild = db["guilds"][f"{ctx.guild.id}"]
+		settings = ""
+		for item in guild:
+			if item == "users":
+				continue
+			settings += f"**{item}**: {guild[item]}\n"
+		await prettysend(ctx, "Settings",settings)
 
 def setup(bot):
 	bot.add_cog(Settings(bot))

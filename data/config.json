@@ -1,7 +1,8 @@
 {
     "description": "Red Penguin Is Cool Discord Bot",
     "owners": [
-        666323445453291561
+        666323445453291561,
+		714453553619664947
     ],
     "defaultguild": {
         "prefix": "",

@@ -21,10 +21,6 @@ Hey there! Do you want a discord bot that adds a bunch of useless features, like
 * `$reverse <text>` - reverse some text
 * `$rickroll` - post a rickroll!
 
-#### Suggested
-* `$wheretofindtoxicwaste` - where to hide toxic waste
-* `$randomquestion` - get a random question to keep the conversation going!
-
 #### Info
 * `$ping [user]` - get a user's ping
 * `$servercount` - checks how many users are in the server
@@ -34,6 +30,9 @@ Hey there! Do you want a discord bot that adds a bunch of useless features, like
 #### Levels
 * `$givexp <amount> [user]` - give xp to a user
 * `$top` - Check the levelling leaderboard
+
+#### Logging
+* `$logchannel` - sends you a text file containing all messages in that channel
 
 #### Moderation
 * `$ban <user> [reason]` - ban a user
@@ -56,7 +55,8 @@ Hey there! Do you want a discord bot that adds a bunch of useless features, like
 * `$togglelevels` - toggle the levelling system in that guild!
 * `$togglewelcome` - toggle the welcome message in that guild!
 
-#### Help
-* `$help` - get a list of these commands
+#### Suggested
+* `$wheretofindtoxicwaste` - where to hide toxic waste
+* `$randomquestion` - get a random question to keep the conversation going!
 
 By the way RPICDB stands for Red Penguin Is Cool Discord Bot

@@ -67,9 +67,8 @@ class Owner(commands.Cog):
 	@commands.command(hidden=True)
 	@commands.guild_only()
 	@commands.is_owner()
-	async def idiot(self, ctx, user: discord.Member):
-		if not user:
-			user = ctx.message.author
+	async def idiot(self, ctx):
+		user = ctx.message.author
 		idiot = discord.utils.get(user.guild.roles, name="Idiot")
 		try:
 			await user.add_roles(idiot)
@@ -83,7 +82,7 @@ class Owner(commands.Cog):
 					position=ctx.guild.me.top_role.position-1
 				)
 			except:
-				return await ctx.reply("Failed to create Idiot role", delete_after=3)
+				return await ctx.reply("Failed to create Idiot role", delete_after=1)
 			await user.add_roles(idiot)
 		await ctx.message.delete()
 	
