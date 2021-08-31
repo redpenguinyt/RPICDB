@@ -12,7 +12,7 @@ def write_json(filename, contents):
     with open(filename, 'w') as outfile:
         json.dump(contents, outfile, ensure_ascii=True, indent=4)
 
-def config(filename: str = "data/config"):
+def config(filename: str = "config"):
     try:
         with open(f"{filename}.json", encoding='utf8') as data:
             return json.load(data)
@@ -21,7 +21,7 @@ def config(filename: str = "data/config"):
 
 def getinfofromguild(guildid, key):
 	guilds = db["guilds"]
-	config = load_json("data/config.json")
+	config = load_json("config.json")
 	if f"{guildid}" in guilds:
 		return guilds[f"{guildid}"][key]
 	else:

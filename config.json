@@ -5,7 +5,7 @@
 		714453553619664947
     ],
     "defaultguild": {
-        "prefix": "",
+        "prefix": "$",
         "premium": false,
         "channelid": "",
         "isLevels": true,

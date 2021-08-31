@@ -6,6 +6,8 @@ from replit import db
 config = config()
 
 def update_data(user: discord.Member):
+	if not f"{user.guild.id}" in db["guilds"]:
+		db["guilds"][f"{user.guild.id}"] = config["defaultguild"]
 	if not f"{user.id}" in db["guilds"][f"{user.guild.id}"]["users"]:
 		db["guilds"][f"{user.guild.id}"]["users"][f"{user.id}"] = {"xp":0,"level":1}
 
