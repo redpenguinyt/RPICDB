@@ -1,6 +1,7 @@
 import discord, os, random, asyncpraw, requests, json
 from discord.ext import commands
 from utils import getinfofromguild, prettysend
+from discord_slash import cog_ext
 
 reddit = asyncpraw.Reddit(
     client_id=os.environ['reddit_id'],
@@ -17,21 +18,17 @@ compliments = [  # List of encouragements
     "your hair is nice %s"
 ]
 
-def get_quote():  # get a random quote
-    response = requests.get("https://zenquotes.io/api/random")
-    json_data = json.loads(response.text)
-    quote = json_data[0]['q'] + " -" + json_data[0]['a']
-    return (quote)
+eightball = [ # list of 8ball answers
+	"100% no",
+	"not rly",
+	"lol no",
+	"maybe",
+	"kinda",
+	"hecc yeah",
+	"of course"
+]
 
-class Fun(commands.Cog):
-	""" Fun! FUn! FUN! """
-
-	def __init__(self, bot):
-		self.bot = bot
-
-	@commands.command(help="poop")
-	async def poop(self, ctx):
-		await prettysend(ctx, "Poop", """
+poopascii = """
 ░░░░░░░░░░░█▀▀░░█░░░░░░
 ░░░░░░▄▀▀▀▀░░░░░█▄▄░░░░
 ░░░░░░█░█░░░░░░░░░░▐░░░
@@ -44,54 +41,90 @@ class Fun(commands.Cog):
 ░░░█▐▀▀▀░▀▀▀▀░░▐░█░░░░░
 ░░▐█▐▄░░▀░░░░░░▐░█▄▄░░
 ░░░▀▀░▄POOP▄░░░▐▄▄▄▀░░░
-		""")
+"""
 
-	@commands.command(help="post a meme!")
-	async def meme(self, ctx, sub="memes"):
-		async with ctx.channel.typing():
-			sub.replace("r/","")
-			if not getinfofromguild(ctx.guild.id, "premium") and sub != "memes":
-				sub = "memes"
-				await ctx.reply("Custom subreddits require premium! In the meantime, enjoy a meme from r/memes")
-			subreddit = await reddit.subreddit(sub, fetch=True)
-			if subreddit.over18:
-				ctx.reply("BONK no horny")
-				return
-			meme = await subreddit.random()
-			if meme.over_18:
-				await ctx.reinvoke()
-				return
-			embed = discord.Embed(title=meme.title,color=0xe74c3c)
-			embed.set_image(url=meme.url)
-			embed.set_footer(text=f"Credit to u/{meme.author.name}")
-			await ctx.channel.send(embed=embed)
+def get_quote():  # get a random quote
+    response = requests.get("https://zenquotes.io/api/random")
+    json_data = json.loads(response.text)
+    quote = json_data[0]['q'] + " -" + json_data[0]['a']
+    return (quote)
+
+class Fun(commands.Cog):
+	""" Fun! FUn! FUN! """
+
+	def __init__(self, bot):
+		self.bot = bot
+
+	@cog_ext.cog_slash(name="8ball", description="Shake that 8ball for wisdom!")
+	async def eightball(self, ctx, question):
+		await prettysend(ctx, question, random.choice(eightball))
+
+	@cog_ext.cog_slash(description="poop")
+	async def poop(self, ctx):
+		await ctx.send(
+			embed=discord.Embed(color=0xe74c3c,
+			title="Poop", 
+			description = poopascii
+			)
+		)
+
+	@cog_ext.cog_slash(description="Post a meme!")
+	async def meme(self, ctx, subreddit="memes"):
+		await ctx.defer()
+		try:
+			if not getinfofromguild(ctx.guild.id, "premium") and subreddit != "memes":
+				subreddit = "memes"
+				await ctx.send("Custom subreddits require premium! In the meantime, enjoy a meme from r/memes",hidden=True)
+		except: subreddit = "memes"
+		requestedsub = None
+		try:
+			requestedsub = await reddit.subreddit(subreddit, fetch=True)
+		except:
+			await ctx.send("Could not find that subreddit, sorry!",hidden=True)
+			return
+		
+		post = await requestedsub.random()
+		
+		embed = discord.Embed(title=post.title,color=0xe74c3c)
+		embed.set_image(url=post.url)
+		embed.set_footer(text=f"Credit to u/{post.author.name}")
+		await ctx.send(embed=embed)
 	
-	@commands.command(help='Rickroll!')
+	@cog_ext.cog_slash(description='Rickroll!')
 	async def rickroll(self, ctx):
-		embed = discord.Embed(title='Rickroll',description='Never gonna give you up',color=0xe74c3c)
-		embed.set_author(name=ctx.author.name,url='https://www.youtube.com/watch?v=dQw4w9WgXcQ',icon_url=ctx.author.avatar_url)
+		embed = discord.Embed(
+			title='Rickroll',
+			description='Never gonna give you up',
+			color=0xe74c3c
+		)
 		embed.set_image(url='https://media.giphy.com/media/Ju7l5y9osyymQ/giphy.gif')
-
 		embed.add_field(name='Click here', value='[Click Here!](https://youtube.com/watch?v=dQw4w9WgXcQ/)')
-		embed.set_footer(text='Made in Python', icon_url='http://i.imgur.com/5BFecvA.png')
 
 		await ctx.send(embed=embed)
 		
-	@commands.command(help="reverse whatever you say!", aliases=["r"])
+	@cog_ext.cog_slash(description="Reverse whatever you say!")
 	async def reverse(self, ctx, *, message):
 		await prettysend(ctx, message[::-1])
 
-	@commands.command(brief="inspiring quote!")
+	@cog_ext.cog_slash(description="Get an inspiring quote!")
 	async def inspire(self, ctx):
 		await prettysend(ctx, get_quote())
 
-	@commands.command(help="compliment someone!", aliases=["c"])
-	async def compliment(self, ctx, target):
-		await prettysend(ctx, "", random.choice(compliments) % target)
+	@cog_ext.cog_slash(description="Compliment someone!")
+	async def compliment(self, ctx, target: discord.Member):
+		await prettysend(ctx, "", random.choice(compliments) % target.mention)
 	
-	@commands.command(help="RPICDB will help you choose something!")
-	async def choose(self, ctx, *, things="yes no"):
-		await prettysend(ctx, random.choice(things.split(" ")))
+	@cog_ext.cog_slash(description="RPICDB will help you choose something!")
+	async def choose(self, ctx, choice1, choice2, choice3="", choice4="", choice5=""):
+		choices = [choice1,choice2,choice3,choice4,choice5]
+		for choice in choices:
+			if choice == "":
+				choices.pop(choices.index(choice))
+		await prettysend(ctx, random.choice(choices))
+	
+	@cog_ext.cog_slash(description="Roll the dice!")
+	async def dice(self, ctx):
+		await prettysend(ctx, "Dice", random.randint(1,6))
 
 def setup(bot):
 	bot.add_cog(Fun(bot))

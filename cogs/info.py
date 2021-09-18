@@ -1,7 +1,8 @@
 import discord
 from discord.ext import commands
-from utils import config, prettysend
+from utils import config
 from replit import db
+from discord_slash import cog_ext
 
 config = config()
 
@@ -17,16 +18,42 @@ class Info(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
-	@commands.command(aliases=["sc"], help="checks how many users are in the server")
-	@commands.guild_only()
-	async def servercount(self, ctx):
-		await prettysend(ctx, f"There are {ctx.guild.member_count} users in {ctx.guild.name}")
+	@cog_ext.cog_slash(description="Get help")
+	async def help(self, ctx):
+		description = """
+Red Penguin Is Cool Discord Bot
+RPICDB is the everything Discord bot for all your Discord needs!
+Website: https://rpicdb.redpenguin.repl.co
+Support: https://discord.gg/C9E5EqaHR8
+		"""
 
-	@commands.command(aliases=["level","user","p"],help="get info about a user or yourself!")
-	@commands.guild_only()
-	async def userinfo(self, ctx, user: discord.Member=None):
-		if user is None:
-			user = ctx.message.author
+		await ctx.send(
+			embed=discord.Embed(
+				color = 0xe74c3c,
+				title = "RPICDB support!",
+				description = description
+			),
+			hidden = True
+		)
+
+	@cog_ext.cog_subcommand(
+		base="info",
+        name="servercount",
+        description="Checks how many users are in the server")
+	async def servercount(self, ctx):
+		embed = discord.Embed(
+			color=0xe74c3c,
+			title = f"There are {ctx.guild.member_count} users in {ctx.guild.name}"
+		)
+		await ctx.send(embed=embed, hidden=True)
+
+	@cog_ext.cog_subcommand(
+		base="info",
+		name="user",
+		description="Get info about a user!")
+	async def userinfo(self, ctx, user: discord.Member):
+		if not user:
+			user = ctx.author
 		userinfo = {"level":1,"xp":0}
 		if f"{user.id}" in db["guilds"][f"{ctx.guild.id}"]["users"]:
 			userinfo = db["guilds"][f"{ctx.guild.id}"]["users"][f"{user.id}"]
@@ -37,47 +64,62 @@ class Info(commands.Cog):
 		date_format = "%a, %d %b %Y %I:%M %p"
 		members = sorted(ctx.guild.members, key=lambda m: m.joined_at)
 		role_string = ' '.join([r.mention for r in user.roles][1:])
+		is_bot = "`No`"
+		if user.bot: is_bot = "`Yes`"
 
-		embed = discord.Embed(color=0xe74c3c)
+		embed = discord.Embed(
+			color = 0xe74c3c,
+			title = "User Info"
+		)
 		embed.set_thumbnail(url=user.avatar_url)
-		embed.set_author(name=f"{user}",icon_url=user.avatar_url)
-		embed.add_field(name="Joined", value=user.joined_at.strftime(date_format))
-		embed.add_field(name="Join position", value=f"{members.index(user)+1}")
-		embed.add_field(name="Registered", value=f"{user.created_at.strftime(date_format)}")
-		embed.add_field(name="Roles [{}]".format(len(user.roles)-1), value=role_string, inline=False)
-		embed.add_field(name="Level", value=lvl)
-		embed.add_field(name="XP",value=f"{xp}/{lvl_lmt}")
+		embed.add_field(name="User Name", value=f"`{user}`", inline=False)
+		embed.add_field(name="Joined", value=f"`{user.joined_at.strftime(date_format)}`")
+		embed.add_field(name="Join position", value=f"`{members.index(user)+1}`")
+		embed.add_field(name="Registered", value=f"`{user.created_at.strftime(date_format)}`", inline=False)
+		embed.add_field(name="Roles [{}]".format(len(user.roles)-1), value=f"{role_string}")
+		embed.add_field(name="Bot", value=is_bot)
+		embed.add_field(name="Mention", value=f"{user.mention}", inline=False)
+		embed.add_field(name="Level", value=f"`{lvl}`")
+		embed.add_field(name="XP",value=f"`{xp}/{lvl_lmt}`")
 		embed.set_footer(text='ID: ' + f"{user.id}")
 
-		await ctx.reply(embed=embed)
+		await ctx.send(embed=embed, hidden=True)
 
-	@commands.command(help="get info about a server",aliases=["server","s"])
-	@commands.guild_only()
+	@cog_ext.cog_subcommand(
+		base="info",
+		name="server",
+		description="Check info about current server")
 	async def serverinfo(self, ctx):
-		""" Check info about current server """
 		if ctx.invoked_subcommand is None:
 			find_bots = sum(1 for member in ctx.guild.members if member.bot)
 
-			embed = discord.Embed(color=0xe74c3c)
+			embed = discord.Embed(
+				color = 0xe74c3c,
+				title = "Server Info"
+			)
 
 			if ctx.guild.icon:
 				embed.set_thumbnail(url=ctx.guild.icon_url)
 			if ctx.guild.banner:
 				embed.set_image(url=ctx.guild.banner_url_as(format="png"))
-			embed.set_author(name=f"{ctx.guild.name}",icon_url=ctx.guild.icon_url)
-			embed.add_field(name="Server Name", value=ctx.guild.name, inline=True)
-			embed.add_field(name="Server ID", value=ctx.guild.id, inline=True)
-			embed.add_field(name="Members", value=ctx.guild.member_count, inline=True)
-			embed.add_field(name="Bots", value=find_bots, inline=True)
-			embed.add_field(name="Owner", value=ctx.guild.owner, inline=True)
-			embed.add_field(name="Region", value=ctx.guild.region, inline=True)
-			embed.add_field(name="Created", value=simpledate(ctx.guild.created_at), inline=True)
-			await ctx.reply(embed=embed)
+			embed.add_field(name="Server Name", value=f"`{ctx.guild.name}`", inline=False)
+			embed.add_field(name="Members", value=f"`{ctx.guild.member_count}`")
+			embed.add_field(name="Bots", value=f"`{find_bots}`")
+			embed.add_field(name="Owner", value=f"`{ctx.guild.owner}`", inline=False)
+			embed.add_field(name="Region", value=f"`{ctx.guild.region}`")
+			embed.add_field(name="Created", value=f"`{simpledate(ctx.guild.created_at)}`")
+			embed.set_footer(text='ID: ' + f"{ctx.guild.id}")
+			await ctx.send(embed=embed, hidden=True)
 
-	@commands.command(help="check your ping")
+	@cog_ext.cog_subcommand(
+		base="info",
+        name="ping",
+        description="Check the bot's latency")
 	async def ping(self, ctx):
-		await prettysend(ctx, f"{ctx.author.mention}\'s: {round(self.bot.latency * 1000)}",delete_after=3.0)
-		await ctx.message.delete()
+		await ctx.send(embed=discord.Embed(
+			title=f"Ping: {round(self.bot.latency * 1000)}ms"),
+			hidden=True
+		)
 
 def setup(bot):
 	bot.add_cog(Info(bot))

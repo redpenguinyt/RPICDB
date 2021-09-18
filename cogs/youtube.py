@@ -1,11 +1,12 @@
-import discord, os
+import discord, os, random, pyyoutube
 from discord.ext import commands, tasks
 from replit import db
-from pyyoutube import Api
 from utils import prettysend, config
 
 config = config()
-api = Api(api_key=os.environ['yt_api_key'])
+api = pyyoutube.Api(
+	api_key=os.environ['yt_api_key']
+)
 
 def getytchannel(id):
 	return api.get_channel_info(channel_id=id).items[0].to_dict()
@@ -32,13 +33,13 @@ def guildChannelId(guildid):
 
 async def setchannelid(self, ctx, channelId=""):
 	if channelId == "":
-		await prettysend(ctx, "Disconnected YouTube Channel!")
+		await prettysend(ctx, "Disconnected YouTube Channel!", hidden=True)
 	else:
 		try:
 			channel = getytchannel(channelId)["snippet"]["title"]
+			await prettysend(ctx, f"Connected to {channel}!", hidden=True)
 		except:
-			await prettysend(ctx, "No channel found!")
-		await prettysend(ctx, f"Connected to {channel}!")
+			await prettysend(ctx, "No channel found!", hidden=True)
 	if not db["guilds"][f"{ctx.guild.id}"]:
 		db["guilds"][f"{ctx.guild.id}"] = config["defaultguild"]
 		db["guilds"]["{ctx.guild.id}"]["channelid"] = channelId
@@ -53,10 +54,10 @@ class Youtube(commands.Cog):
 	
 	@commands.Cog.listener()
 	async def on_ready(self):
-		repeat.start(self)
+		checkforupload.start(self)
 	
 @tasks.loop(minutes=10)
-async def repeat(self):
+async def checkforupload(self):
 	for guild in self.bot.guilds:
 		if f"{guild.id}" in db["guilds"] and db["guilds"][f"{guild.id}"]["channelid"] != "":
 			channelid = db["guilds"][f"{guild.id}"]["channelid"]
@@ -67,10 +68,12 @@ async def repeat(self):
 				result = api.get_activities_by_channel(channel_id=channelid, count=1).items[0]
 				videoId = result.contentDetails.upload.videoId
 				discordchannel = discord.utils.get(guild.text_channels, name="yt-uploads")
-				if not channel:
+				if not discordchannel:
 					discordchannel = guild.system_channel
+				if not discordchannel:
+					discordchannel = guild.text_channels[0]
 				sent = await discordchannel.send(f"**{channelname}** uploaded a new video! https://www.youtube.com/watch?v={videoId} @everyone")
-				try: sent.publish()
+				try: await sent.publish()
 				except: pass
 
 def setup(bot):

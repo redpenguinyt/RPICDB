@@ -1,154 +1,128 @@
 import discord
 from discord.ext import commands
 from utils import prettysend
-
-# This prevents staff members from being punished
-class Sinner(commands.Converter):
-    async def convert(self, ctx, argument):
-        argument = await commands.MemberConverter().convert(ctx, argument)
-        permission = argument.guild_permissions.manage_messages
-        if not permission:
-            return argument
-        else:
-            raise commands.BadArgument("You cannot punish other staff members")
-
-
-class Redeemed(commands.Converter):
-    async def convert(self, ctx, argument):
-        argument = await commands.MemberConverter().convert(
-            ctx, argument)  # gets member object
-        muted = discord.utils.get(ctx.guild.roles,
-                                  name="Muted")  # gets role object
-        if muted in argument.roles:  # checks if user has muted role
-            return argument  # returns member object if there is muted role
-        else:
-            raise commands.BadArgument("The user was not muted.")
-
-
-async def mute(ctx, user, reason):
-    muted = discord.utils.get(ctx.guild.roles, name="Muted")
-    hell = discord.utils.get(ctx.guild.text_channels, name="hell")
-    if not muted:
-        try:
-            muted = await ctx.guild.create_role(name="Muted",reason="To use for muting")
-            for channel in ctx.guild.channels:
-                await channel.set_permissions(muted,send_messages=False,read_message_history=True,read_messages=True)
-        except discord.Forbidden:
-            return await ctx.send("I have no permissions to make a muted role")
-        await user.add_roles(muted)
-        await prettysend(ctx, f"{user.mention} has been sent to hell for {reason}")
-    else:
-        await user.add_roles(muted)
-        await prettysend(ctx, f"{user.mention} has been sent to hell for {reason}")
-
-    if not hell:
-        overwrites = {
-            ctx.guild.default_role:
-            discord.PermissionOverwrite(read_message_history=False),
-            ctx.guild.me:
-            discord.PermissionOverwrite(send_messages=True),
-            muted:
-            discord.PermissionOverwrite(read_message_history=True)
-        }
-        try:
-            channel = await ctx.guild.create_text_channel(
-                'hell', overwrites=overwrites)
-            await prettysend(channel, 
-                "Welcome to hell.. You will spend your time here until you get unmuted. Enjoy the silence."
-            )
-        except discord.Forbidden:
-            return await ctx.send("I have no permissions to make #hell")
-
+from discord_slash import cog_ext
 
 class Moderation(commands.Cog):
-    """Commands used to moderate your guild"""
-    def __init__(self, bot):
-        self.bot = bot
+	"""Commands used to moderate your guild"""
+	def __init__(self, bot):
+		self.bot = bot
 
-    async def __error(self, ctx, error):
-        if isinstance(error, commands.BadArgument):
-            await ctx.send(error)
+	async def __error(self, ctx, error):
+		if isinstance(error, commands.BadArgument):
+			await ctx.send(error)
 
-    @commands.command(aliases=["banish"], help="ban a user")
-    @commands.has_permissions(ban_members=True)
-    async def ban(self, ctx, user: Sinner = None, reason=None):
+	@cog_ext.cog_subcommand(
+		base="mod",
+		name="kick",
+		description="Kick a user")
+	@commands.has_permissions(kick_members=True)
+	async def kick(self, ctx, user: discord.Member, reason="None specified"):
+		if user.guild_permissions.manage_messages:
+			return await ctx.send("That user has manage messages too!", hidden=True)
+		try:
+			await ctx.guild.kick(user,reason = f"By {ctx.author} for {reason}")
+			await prettysend(ctx,
+				"User kicked successfully",
+				f"{user.mention} was kicked by {ctx.author} for {reason}"
+			)
+		except discord.Forbidden:
+			return await ctx.send("Are you trying to kick someone higher than the bot", hidden=True)
 
-        if not user:
-            return await ctx.send("You must specify a user")
+	@cog_ext.cog_subcommand(
+		base="mod",
+		name="ban",
+		description="Ban a user")
+	@commands.has_permissions(ban_members=True)
+	async def ban(self, ctx, user: discord.Member, reason="None specified"):
+		if user.guild_permissions.manage_messages:
+			return await ctx.send("That user has manage messages too!", hidden=True)
+		try:
+			await ctx.guild.ban(
+				user, reason = f"By {ctx.author} for {reason}")
+			await prettysend(ctx,
+				"User banned successfully",
+				f"{user.mention} was banned by {ctx.author} for {reason}"
+			)
+		except discord.Forbidden:
+			return await ctx.send("Are you trying to ban someone higher than the bot", hidden=True)
+	
+	@cog_ext.cog_subcommand(
+		base="mod",
+		name="mute",
+		description="Mutes the specified user")
+	@commands.has_permissions(manage_messages=True)
+	async def mute(self, ctx, user: discord.Member, reason="treason"):
+		muted = discord.utils.get(ctx.guild.roles, name="Muted")
+		if not muted:
+			try:
+				muted = await ctx.guild.create_role(name="Muted",reason="To use for muting")
+				for channel in ctx.guild.channels:
+					await channel.set_permissions(muted,send_messages=False,read_message_history=True,read_messages=True)
+			except discord.Forbidden:
+				return await ctx.send("I have no permissions to make a muted role")
+			await user.add_roles(muted)
+			await prettysend(ctx, f"{user.mention} has been sent to hell for {reason}")
+		else:
+			await user.add_roles(muted)
+			await prettysend(ctx,
+				"User muted successfully",
+				f"{user.mention} was muted by {ctx.author} for {reason}"
+			)
 
-        try:
-            await ctx.guild.ban(
-                user, f"By {ctx.author} for {reason}"
-                or f"By {ctx.author} for None Specified")
-            await prettysend(ctx,
-                f"{user.mention} was banned by {ctx.message.author} for {reason}"
-            )
-        except discord.Forbidden:
-            return await ctx.send(
-                "Are you trying to ban someone higher than the bot")
+	@cog_ext.cog_subcommand(
+		base="mod",
+		name="unmute",
+		description="Unmute a user")
+	@commands.has_permissions(manage_messages=True)
+	async def unmute(self, ctx, user: discord.Member):
+		muted = discord.utils.get(ctx.guild.roles, name="Muted")
+		if not muted in user.roles:
+			await ctx.send("That user isn't muted!", hidden=True)
+		else:
+			await user.remove_roles(muted)
+			await ctx.send(f"{user.mention} has been unmuted", hidden=True)
 
-    @commands.command(help="mute a user")
-    @commands.has_permissions(manage_messages=True)
-    async def mute(self, ctx, user: Sinner, reason=None):
-        await mute(ctx, user, reason or "treason")
+	@cog_ext.cog_subcommand(
+		base="mod",
+		name="block",
+		description="Block a user from the current channel")
+	@commands.has_permissions(manage_channels=True)
+	async def block(self, ctx, user: discord.Member):
+		if user.guild_permissions.manage_messages:
+			return await ctx.send("That user has manage messages too!", hidden=True)
+		await ctx.channel.set_permissions(user, send_messages=False)
+		await prettysend(ctx,
+			"User blocked successfully",
+			f"{user.mention} was muted by {ctx.author}"
+		)
 
-    @commands.command(help="kick a user")
-    @commands.has_permissions(kick_members=True)
-    async def kick(self, ctx, user: Sinner = None, reason=None):
-        if not user:
-            return await ctx.send("You must specify a user")
+	@cog_ext.cog_subcommand(
+		base="mod",
+		name="unblock",
+		description="Unblock a use from the current channel")
+	@commands.has_permissions(manage_channels=True)
+	async def unblock(self, ctx, user: discord.Member):
+		await ctx.channel.set_permissions(user, send_messages=True)
+		await ctx.send(f"{user.mention} has been unblocked", hidden=True)
 
-        try:  # tries to kick user
-            await ctx.guild.kick(user)
-            await prettysend(ctx, 
-                f"{ctx.author.mention} kicked {user.mention} for {reason}")
-        except discord.Forbidden:
-            return await ctx.send(
-                "Are you trying to kick someone higher than the bot?")
+	@cog_ext.cog_subcommand(
+		base="mod",
+		name="clear",
+		description="Bulk remove messages from the current channel")
+	@commands.has_permissions(manage_messages=True)
+	async def clear(self, ctx, limit: int):
+		await ctx.channel.purge(limit=limit)
+		await ctx.send(f"Channel cleared of {limit} messages", hidden=True)
 
-    @commands.command(help="removes messages from channel")
-    @commands.guild_only()
-    @commands.has_permissions(manage_messages=True)
-    async def clear(self, ctx, limit: int = 5):
-        await ctx.channel.purge(limit=limit + 1)
-
-    @commands.command(help="unmute a user")
-    @commands.has_permissions(manage_messages=True)
-    async def unmute(self, ctx, user: Redeemed):
-        await user.remove_roles(
-            discord.utils.get(ctx.guild.roles, name="Muted"))
-        await prettysend(ctx, f"{user.mention} has been unmuted")
-
-    @commands.command(help="Warn a user for being bad")
-    @commands.guild_only()
-    async def warn(self, ctx, member: discord.Member, *, reason="treason"):
-        await prettysend(ctx, f"{member.mention} has been warned for {reason}")
-        await member.send(f"You have been warned for {reason}")
-
-    @commands.command(help="block a user from the current channel")
-    @commands.has_permissions(manage_messages=True)
-    async def block(self, ctx, user: Sinner = None):
-        if not user:  # checks if there is user
-            return await ctx.send("You must specify a user")
-
-        await ctx.set_permissions(user, send_messages=False)
-        await prettysend(ctx, "Blocked user form this channel")
-
-    @commands.command(help="unblock a use from the current channel")
-    @commands.has_permissions(manage_messages=True)
-    async def unblock(self, ctx, user: Sinner = None):
-        if not user:  # checks if there is user
-            return await ctx.send("You must specify a user")
-
-        await ctx.set_permissions(user, send_messages=True)
-        await prettysend(ctx, "Unblocked user from this channel")
-
-    @commands.command(help="nuke the channel and make a copy")
-    @commands.has_permissions(manage_channels=True)
-    async def nuke(self, ctx):
-        await ctx.channel.clone()
-        await ctx.channel.delete()
-        
+	@cog_ext.cog_subcommand(
+		base="mod",
+		name="nuke",
+		description="nuke the channel and make a copy")
+	@commands.has_permissions(manage_channels=True)
+	async def nuke(self, ctx):
+		await ctx.channel.clone()
+		await ctx.channel.delete()
 
 def setup(bot):
-    bot.add_cog(Moderation(bot))
+	bot.add_cog(Moderation(bot))

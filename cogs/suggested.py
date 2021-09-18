@@ -1,6 +1,7 @@
-import random, asyncpraw, os
+import discord, random, asyncpraw, os
 from discord.ext import commands
 from utils import prettysend
+from discord_slash import cog_ext
 
 reddit = asyncpraw.Reddit(
     client_id=os.environ['reddit_id'],
@@ -14,20 +15,46 @@ class Suggested(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 	
-	@commands.command(help="Where to hide toxic waste", aliases=["wthtw"])
+	@cog_ext.cog_subcommand(
+		base="suggested",
+        name="wheretohidetoxicwaste",
+        description="Where to hide toxic waste")
 	async def wheretohidetoxicwaste(self, ctx):
 		randomx = random.randint(-160,160)
 		randomy = random.randint(-160,160)
 		where = f"https://www.google.com/maps/@{randomx},{randomy},10z"
-		await prettysend(ctx, f"Here: {where}")
+		await ctx.send(
+			embed=discord.Embed(color=0xe74c3c,
+			title=f"Here: {where}")
+		)
 	
-	@commands.command(help="Get a random question", aliases=["q"])
+	@cog_ext.cog_subcommand(
+		base="suggested",
+        name="randomquestion",
+        description="Get a random question")
 	async def randomquestion(self, ctx):
+		await ctx.defer()
 		subreddit = await reddit.subreddit("AskReddit", fetch=True)
 		question = await subreddit.random()
-		if question.over_18:
-			return
-		await prettysend(ctx, question.title)
+		await ctx.send(
+			embed=discord.Embed(color=0xe74c3c,
+			title=question.title,
+#			description=question.comments[0].body
+		))
+	
+	@cog_ext.cog_subcommand(
+		base="suggested",
+        name="ppsize",
+        description="Check a user's pp size")
+	async def ppsize(self, ctx, user: discord.Member):
+		if not user:
+			user = ctx.message.author
+		embed = discord.Embed(
+			title = f"{user.name}\'s pp:",
+			description=f"8{'=' * random.randint(0,10)}D"
+		)
+		await ctx.send(embed=embed)
+
 
 def setup(bot):
     bot.add_cog(Suggested(bot))
