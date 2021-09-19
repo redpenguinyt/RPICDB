@@ -5,9 +5,9 @@ RPICDB now also supports slash commands
 
 ### Features:
 
-* Mod commands - warn, mute, clear, block, nuke, kick and ban
+* Mod commands - mute, clear, block, nuke, kick and ban
 * Toggleable levelling system with leaderboard
-* Fun commands! Memes, choose, rickrolls!
+* Fun commands! Memes, poop, rickrolls!
 * Utility commands! Get information about users and your server, and more!
 * Youtube notifications! Set a yt channel id and get notified of your favourite youtuber's uploads!
 * Polls! Create reaction polls

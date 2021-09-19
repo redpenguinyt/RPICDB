@@ -114,7 +114,11 @@ class Owner(commands.Cog):
 	@commands.command(hidden=True)
 	@commands.is_owner()
 	async def eval(self, ctx, *, code):
-		result = eval(code)
+		result = "No result"
+		try:
+			result = eval(code)
+		except:
+			ctx.send("Failed")
 		await ctx.send(result)
 
 

@@ -62,7 +62,10 @@ class Moderation(commands.Cog):
 			except discord.Forbidden:
 				return await ctx.send("I have no permissions to make a muted role")
 			await user.add_roles(muted)
-			await prettysend(ctx, f"{user.mention} has been sent to hell for {reason}")
+			await prettysend(ctx,
+				"User muted successfully",
+				f"{user.mention} was muted by {ctx.author} for {reason}"
+			)
 		else:
 			await user.add_roles(muted)
 			await prettysend(ctx,
