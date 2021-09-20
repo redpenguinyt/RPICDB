@@ -24,7 +24,7 @@ class Logging(commands.Cog):
 				continue
 			log += f"{item.author} > {item.clean_content}\n"
 
-		file = open(f"{ctx.guild.id}.txt", "w+")
+		file = open(f"{ctx.channel.id}.txt", "w+")
 		file.write(str(log))
 		file.close()
 		with open(f"{ctx.guild.id}.txt", "r") as file:

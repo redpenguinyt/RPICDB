@@ -11,6 +11,12 @@ log.setLevel(logging.ERROR)
 def home():
 	return redirect("https://rpicdb-website.redpenguin.repl.co/")
 
+@app.route("/<url>")
+def url(url):
+	return redirect(
+		f"https://rpicdb-website.redpenguin.repl.co/{url}"
+	)
+
 def run():
   app.run(
 		host='0.0.0.0',

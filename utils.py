@@ -1,5 +1,11 @@
-import discord, json, traceback
-from replit import db
+import discord, json, traceback, os
+try: import pymongo
+except: 
+	os.system("pip install pymongo[srv]")
+	import pymongo
+
+client = pymongo.MongoClient(os.environ['mongo_url'])
+guildsdb = client.RPICDB.guilds
 
 def load_json(filename):
     with open(filename, encoding='utf-8') as infile:
@@ -17,12 +23,25 @@ def config(filename: str = "config"):
         raise FileNotFoundError("JSON file wasn't found")
 
 def getinfofromguild(guildid, key):
-	guilds = db["guilds"]
-	config = load_json("config.json")
-	if f"{guildid}" in guilds:
-		return guilds[f"{guildid}"][key]
+	if guildsdb.find_one({"_id":guildid}):
+		if key == "all":
+			return guildsdb.find_one({"_id":guildid})
+		return guildsdb.find_one({"_id":guildid})[key]
 	else:
-		return config["defaultguild"][key]
+		addguildtocollection(guildid)
+		return guildsdb.find_one({"_id":guildid})[key]
+
+def addguildtocollection(guildid):
+	newguild = config()["defaultguild"]
+	newguild["_id"] = guildid
+	guildsdb.insert_one(newguild)
+
+def editguildinfo(guildid, key, newvalue):
+	guildsdb.find_one_and_update(
+		{"_id":guildid},
+		{"$set":{key: newvalue}},
+		upsert = True
+	)
 
 async def prettysend(ctx, text, description=None):
 	embed = discord.Embed(

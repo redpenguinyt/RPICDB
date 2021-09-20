@@ -1,6 +1,5 @@
 import discord, random, asyncpraw, os
 from discord.ext import commands
-from utils import prettysend
 from discord_slash import cog_ext
 
 reddit = asyncpraw.Reddit(

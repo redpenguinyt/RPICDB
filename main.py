@@ -4,6 +4,10 @@ from keep_alive import keep_alive
 from discord.ext import commands
 from discord_slash import SlashCommand
 
+#import replit, json
+#file = open(f"db.json", "w+")
+#json.dump(replit.db["guilds"], file)
+
 config = config()
 
 bot = commands.Bot(

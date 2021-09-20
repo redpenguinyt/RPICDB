@@ -1,19 +1,15 @@
 import discord
 from discord.ext import commands
-from utils import config
+from utils import config, getinfofromguild, editguildinfo
 from cogs import youtube as yt
-from replit import db
 from discord_slash import cog_ext
 
 async def toggleguildsetting(self, ctx, setting, userFriendlyName=""):
-	if not db["guilds"][f"{ctx.guild.id}"]:
-		db["guilds"][f"{ctx.guild.id}"] = config["defaultguild"]
-	
-	isEnabled = db["guilds"][f"{ctx.guild.id}"][setting] == False
+	isEnabled = getinfofromguild(ctx.guild.id, setting) == False
 
-	db["guilds"][f"{ctx.guild.id}"][setting] = isEnabled
+	editguildinfo(ctx.guild.id, setting, isEnabled)
 
-	newPreference = db["guilds"][f"{ctx.guild.id}"][setting]
+	newPreference = getinfofromguild(ctx.guild.id, setting)
 	await ctx.send(
 		embed=discord.Embed(color=0xe74c3c,
 			title=f"{userFriendlyName} setting changed to {newPreference}!"
@@ -63,11 +59,15 @@ class Settings(commands.Cog):
         name="settings",
         description="Check your server's settings")
 	async def settings(self, ctx):
-		guild = db["guilds"][f"{ctx.guild.id}"]
-		settings = ""
+		guild = getinfofromguild(ctx.guild.id, "all")
+
+		# The user doesn't need to see these
+		guild.pop("_id")
+		guild.pop("users")
+		guild.pop("premium")
+
+		settings = "Edit your settings at https://rpicdb.redpenguin.repl.co/dashboard\n"
 		for item in guild:
-			if item == "users":
-				continue
 			settings += f"**{item}**: {guild[item]}\n"
 		await ctx.send(
 			embed = discord.Embed(

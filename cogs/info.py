@@ -1,7 +1,6 @@
 import discord
 from discord.ext import commands
-from utils import config
-from replit import db
+from utils import config, getinfofromguild
 from discord_slash import cog_ext
 
 config = config()
@@ -52,11 +51,12 @@ Support: https://discord.gg/C9E5EqaHR8
 		name="user",
 		description="Get info about a user!")
 	async def userinfo(self, ctx, user: discord.Member):
-		if not user:
-			user = ctx.author
+		users = getinfofromguild(ctx.guild.id, "users")
+		print(users)
 		userinfo = {"level":1,"xp":0}
-		if f"{user.id}" in db["guilds"][f"{ctx.guild.id}"]["users"]:
-			userinfo = db["guilds"][f"{ctx.guild.id}"]["users"][f"{user.id}"]
+		if f"{user.id}" in users:
+			userinfo = users[f"{user.id}"]
+		print(userinfo)
 		lvl = userinfo['level']
 		xp = userinfo["xp"]
 		lvl_lmt = lvl * config["lvlmultiplier"]

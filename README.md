@@ -1,7 +1,7 @@
 # RPICDB
-Hey there! Do you want a discord bot that adds a bunch of useless features, like mute, warn, invite and more? Me too!
+RPICDB is the everything discord bot for you your everything discord needs! It also supports slash commands! Neato!
 
-RPICDB now also supports slash commands
+Check out what I'm working on now on the [github project](https://github.com/redpenguinyt/Discord-bot/projects/1)
 
 ### Features:
 

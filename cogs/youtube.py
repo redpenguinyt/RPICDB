@@ -1,7 +1,7 @@
-import discord, os, random, pyyoutube
+import discord, os, pyyoutube
 from discord.ext import commands, tasks
 from replit import db
-from utils import prettysend, config
+from utils import prettysend, config, getinfofromguild, editguildinfo
 
 config = config()
 api = pyyoutube.Api(
@@ -22,29 +22,16 @@ def isNewVideo(channelid):
 	
 	return acts != prev_acts
 
-def guildChannelId(guildid):
-	guilds = db["guilds"]
-	with guilds[f"{guildid}"]["channelid"] as gcid:
-		if f"{guildid}" in guilds:
-			if gcid != "":
-				return gcid
-		else:
-			return None
-
 async def setchannelid(self, ctx, channelId=""):
 	if channelId == "":
 		await prettysend(ctx, "Disconnected YouTube Channel!", hidden=True)
 	else:
 		try:
 			channel = getytchannel(channelId)["snippet"]["title"]
-			await prettysend(ctx, f"Connected to {channel}!", hidden=True)
+			await ctx.send(f"Connected to {channel}!", hidden=True)
 		except:
-			await prettysend(ctx, "No channel found!", hidden=True)
-	if not db["guilds"][f"{ctx.guild.id}"]:
-		db["guilds"][f"{ctx.guild.id}"] = config["defaultguild"]
-		db["guilds"]["{ctx.guild.id}"]["channelid"] = channelId
-	else:
-		db["guilds"][f"{ctx.guild.id}"]["channelid"] = channelId
+			await ctx.send("No channel found!", hidden=True)
+	editguildinfo(ctx.guild.id, "channelid", channelId)
 
 class Youtube(commands.Cog):
 	"""Youtube upload commands"""
@@ -59,13 +46,13 @@ class Youtube(commands.Cog):
 @tasks.loop(minutes=10)
 async def checkforupload(self):
 	for guild in self.bot.guilds:
-		if f"{guild.id}" in db["guilds"] and db["guilds"][f"{guild.id}"]["channelid"] != "":
-			channelid = db["guilds"][f"{guild.id}"]["channelid"]
-			channel = getytchannel(channelid)
+		guildchannelid = getinfofromguild(guild.id, "channelid")
+		if guildchannelid != "":
+			channel = getytchannel(guildchannelid)
 			channelname = channel["snippet"]["title"]
-			if isNewVideo(channelid):
+			if isNewVideo(guildchannelid):
 				print(f"Task | A new video was uploaded by {channelname}!")
-				result = api.get_activities_by_channel(channel_id=channelid, count=1).items[0]
+				result = api.get_activities_by_channel(channel_id=guildchannelid, count=1).items[0]
 				videoId = result.contentDetails.upload.videoId
 				discordchannel = discord.utils.get(guild.text_channels, name="yt-uploads")
 				if not discordchannel:
