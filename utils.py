@@ -1,8 +1,5 @@
 import discord, json, traceback, os
-try: import pymongo
-except: 
-	os.system("pip install pymongo[srv]")
-	import pymongo
+import pymongo
 
 client = pymongo.MongoClient(os.environ['mongo_url'])
 guildsdb = client.RPICDB.guilds
@@ -31,7 +28,7 @@ def getinfofromguild(guildid, key):
 		addguildtocollection(guildid)
 		return guildsdb.find_one({"_id":guildid})[key]
 
-def addguildtocollection(guildid):
+def addguildtocollection(guildid): # Don't use this in cogs
 	newguild = config()["defaultguild"]
 	newguild["_id"] = guildid
 	guildsdb.insert_one(newguild)
