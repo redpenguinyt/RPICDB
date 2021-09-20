@@ -12,7 +12,7 @@
         "users": {}
     },
     "prefix": "$",
-    "version": "0.9.2",
+    "version": "0.9.5",
     "lvlmultiplier": 50,
-    "debug": true
+    "debug": false
 }

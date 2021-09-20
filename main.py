@@ -4,17 +4,12 @@ from keep_alive import keep_alive
 from discord.ext import commands
 from discord_slash import SlashCommand
 
-#import replit, json
-#file = open(f"db.json", "w+")
-#json.dump(replit.db["guilds"], file)
-
 config = config()
 
 bot = commands.Bot(
     command_prefix = config["prefix"],
 	owner_ids = config["owners"],
 	help_command = None,
-	command_attrs = dict(hidden=True),
 	intents = discord.Intents().all(),
 	activity=discord.Game(name="the saxaphone")
 )

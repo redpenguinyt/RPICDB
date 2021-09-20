@@ -43,6 +43,20 @@ poopascii = """
 ░░░▀▀░▄POOP▄░░░▐▄▄▄▀░░░
 """
 
+rickrollmsgs = [
+	"I found this cool thing %s",
+	"Yo check this out %s",
+	"Cute video of doggo :3 %s",
+	"Adorable cat video %s"
+]
+
+rickrolllinks = [
+	"https://www.youtube.com/watch?v=QB7ACr7pUuE",
+	"https://www.youtube.com/watch?v=-51AfyMqnpI",
+	"https://www.youtube.com/watch?v=SWk1X0buyxQ",
+	"https://www.youtube.com/watch?v=2942BB1JXFk",
+]
+
 def get_quote():  # get a random quote
     response = requests.get("https://zenquotes.io/api/random")
     json_data = json.loads(response.text)
@@ -70,21 +84,21 @@ class Fun(commands.Cog):
 
 	@cog_ext.cog_slash(description="Post a meme!")
 	async def meme(self, ctx, subreddit="memes"):
+		if not getinfofromguild(ctx.guild.id, "premium") and subreddit != "memes":
+			subreddit = "memes"
+			await ctx.send("Custom subreddits require premium! In the meantime, enjoy a meme from r/memes",hidden=True)
+		
 		await ctx.defer()
-		try:
-			if not getinfofromguild(ctx.guild.id, "premium") and subreddit != "memes":
-				subreddit = "memes"
-				await ctx.send("Custom subreddits require premium! In the meantime, enjoy a meme from r/memes",hidden=True)
-		except: subreddit = "memes"
+
 		requestedsub = None
 		try:
 			requestedsub = await reddit.subreddit(subreddit, fetch=True)
 		except:
-			await ctx.send("Could not find that subreddit, sorry!",hidden=True)
+			await ctx.send("Could not find that subreddit",hidden=True)
 			return
 		
 		post = await requestedsub.random()
-		
+
 		embed = discord.Embed(title=post.title,color=0xe74c3c)
 		embed.set_image(url=post.url)
 		embed.set_footer(text=f"Credit to u/{post.author.name}")
@@ -93,14 +107,14 @@ class Fun(commands.Cog):
 	@cog_ext.cog_slash(description='Rickroll!')
 	async def rickroll(self, ctx):
 		embed = discord.Embed(
-			title='Rickroll',
-			description='Never gonna give you up',
+			title='Rickroll posted',
 			color=0xe74c3c
 		)
-		embed.set_image(url='https://media.giphy.com/media/Ju7l5y9osyymQ/giphy.gif')
-		embed.add_field(name='Click here', value='[Click Here!](https://youtube.com/watch?v=dQw4w9WgXcQ/)')
+		embed.set_thumbnail(url='https://media.giphy.com/media/Ju7l5y9osyymQ/giphy.gif')
 
-		await ctx.send(embed=embed)
+		rickroll = random.choice(rickrollmsgs) % f"<{random.choice(rickrolllinks)}>"
+		await ctx.channel.send(rickroll)
+		await ctx.send(embed=embed, hidden=True)
 		
 	@cog_ext.cog_slash(description="Reverse whatever you say!")
 	async def reverse(self, ctx, *, message):
