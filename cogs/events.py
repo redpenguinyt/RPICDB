@@ -15,7 +15,11 @@ class Events(commands.Cog):
 		if isinstance(error, errors.MissingPermissions):
 			await ctx.send("You don't have the right permissions!", hidden=True)
 		else:
-			await ctx.send("There was an error processing the command ;-; ", hidden=True)
+			await ctx.send("""
+An error occurred whilst processing your command. ;-;
+For help, and to report this as an issue, please join the testing server for this bot: https://discord.gg/C9E5EqaHR8
+Also send the error message below:
+			""", hidden=True)
 			if self.config["debug"]:
 				await ctx.send(
 					traceback_maker(error),
@@ -72,6 +76,16 @@ class Events(commands.Cog):
 			print(f"{ctx.guild.name} > {ctx.author} > {ctx.message.clean_content}")
 		except AttributeError:
 			print(f"Private message > {ctx.author} > {ctx.message.clean_content}")
+	
+	@commands.Cog.listener()
+	async def on_slash_command(self, ctx):
+		command = f"/{ctx.name} {ctx.args}"
+		if ctx.subcommand:
+			command = 
+		try:
+			print(f"{ctx.guild.name} > {ctx.author} > {command}")
+		except AttributeError:
+			print(f"Private message > {ctx.author} > {command}")
 
 	@commands.Cog.listener()
 	async def on_ready(self):

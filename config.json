@@ -14,5 +14,5 @@
     "prefix": "$",
     "version": "0.9.5",
     "lvlmultiplier": 50,
-    "debug": false
+    "debug": true
 }
