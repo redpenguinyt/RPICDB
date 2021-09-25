@@ -121,6 +121,5 @@ class Owner(commands.Cog, command_attrs=dict(hidden=True)):
 			ctx.send("Failed")
 		await ctx.send(result)
 
-
 def setup(bot):
 	bot.add_cog(Owner(bot))

@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "RPICDB"
+version = "0.1.0"
+description = ""
+authors = ["RedPenguin <<>>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+psutil = "^5.8.0"
+pymongo = {version = "^3.12.0", extras = ["srv"]}
+python-youtube = "^0.8.1"
+replit = "^3.2.4"
+discord = "^1.7.3"
+Flask = "^2.0.1"
+discord-py-slash-command = "^3.0.1"
+asyncpraw = "^7.4.0"
+
+[tool.poetry.extras]
+srv = ["pymongo"]
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
