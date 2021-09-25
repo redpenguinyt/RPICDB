@@ -11,6 +11,7 @@ Check out what I'm working on now on the [github project](https://github.com/red
 * Utility commands! Get information about users and your server, and more!
 * Youtube notifications! Set a yt channel id and get notified of your favourite youtuber's uploads!
 * Polls! Create reaction polls
+* A welcome message!
 
 ### Commands:
 

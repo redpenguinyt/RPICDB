@@ -79,9 +79,12 @@ Also send the error message below:
 	
 	@commands.Cog.listener()
 	async def on_slash_command(self, ctx):
-		command = f"/{ctx.name} {ctx.args}"
-		if ctx.subcommand:
-			command = 
+		args = ""
+		for i in ctx.args: args += f"{i}"
+
+		command = f"/{ctx.name} {args}"
+		if ctx.subcommand_name:
+			command = f"/{ctx.name} {ctx.subcommand_name} {args}"
 		try:
 			print(f"{ctx.guild.name} > {ctx.author} > {command}")
 		except AttributeError:

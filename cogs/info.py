@@ -52,11 +52,9 @@ Support: https://discord.gg/C9E5EqaHR8
 		description="Get info about a user!")
 	async def userinfo(self, ctx, user: discord.Member):
 		users = getinfofromguild(ctx.guild.id, "users")
-		print(users)
 		userinfo = {"level":1,"xp":0}
 		if f"{user.id}" in users:
 			userinfo = users[f"{user.id}"]
-		print(userinfo)
 		lvl = userinfo['level']
 		xp = userinfo["xp"]
 		lvl_lmt = lvl * config["lvlmultiplier"]

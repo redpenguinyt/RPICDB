@@ -36,10 +36,11 @@ class Suggested(commands.Cog):
 		subreddit = await reddit.subreddit("AskReddit", fetch=True)
 		question = await subreddit.random()
 		await ctx.send(
-			embed=discord.Embed(color=0xe74c3c,
-			title=question.title,
-#			description=question.comments[0].body
-		))
+			embed=discord.Embed(
+				color=0xe74c3c,
+				title=question.title,
+			)
+		)
 	
 	@cog_ext.cog_subcommand(
 		base="suggested",

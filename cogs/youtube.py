@@ -49,7 +49,7 @@ async def checkforupload(self):
 		guildchannelid = getinfofromguild(guild.id, "channelid")
 		if guildchannelid != "":
 			channel = getytchannel(guildchannelid)
-			channelname = channel["snippet"]["title"]
+			channelname = channel
 			if isNewVideo(guildchannelid):
 				print(f"Task | A new video was uploaded by {channelname}!")
 				result = api.get_activities_by_channel(channel_id=guildchannelid, count=1).items[0]

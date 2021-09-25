@@ -109,7 +109,7 @@ class Levels(commands.Cog):
         description="Check the levelling leaderboard")
 	async def top(self, ctx):
 		users = getinfofromguild(ctx.guild.id, "users")
-		topusers = sorted(users.items(), key= lambda x: (x[1]['level'], x[1]['xp']), reverse=True)[:5]
+		topusers = sorted(users.items(), key= lambda x: (x[1]['level']), reverse=True)[:5]
 		tosend = ""
 		i = 0
 		for user in topusers:
