@@ -4,3 +4,4 @@ cogs/__pycache__/
 cogs/owner.py
 data/guilds.json
 .breakpoints
+commandlog.txt

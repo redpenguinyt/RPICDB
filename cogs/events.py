@@ -84,11 +84,14 @@ Also send the error message below:
 
 		command = f"/{ctx.name} {args}"
 		if ctx.subcommand_name:
-			command = f"/{ctx.name} {ctx.subcommand_name} {args}"
+			command = f"{ctx.name} {ctx.subcommand_name} {args}"
 		try:
-			print(f"{ctx.guild.name} > {ctx.author} > {command}")
+			command = f"{ctx.guild.name} > {ctx.author} > {command}"
 		except AttributeError:
-			print(f"Private message > {ctx.author} > {command}")
+			command = f"Private message > {ctx.author} > {command}"
+		print(command)
+		with open("commandlog.txt", "w") as myfile:
+			myfile.write(f"\n{command}")
 
 	@commands.Cog.listener()
 	async def on_ready(self):
