@@ -3,6 +3,8 @@ from discord.ext import commands
 from utils import load_json, write_json
 
 class Owner(commands.Cog, command_attrs=dict(hidden=True)):
+	""" Test commands that only owner can use """
+
 	def __init__(self, bot):
 		self.bot = bot
 
