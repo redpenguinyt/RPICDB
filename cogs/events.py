@@ -90,7 +90,7 @@ Also send the error message below:
 		except AttributeError:
 			command = f"Private message > {ctx.author} > {command}"
 		print(command)
-		with open("commandlog.txt", "w") as myfile:
+		with open("commandlog.txt", "a") as myfile:
 			myfile.write(f"\n{command}")
 
 	@commands.Cog.listener()
