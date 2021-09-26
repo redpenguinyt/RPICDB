@@ -64,7 +64,7 @@ Also send the error message below:
 		try:
 			await member.send(f'Welcome to {member.guild.name}! We hope you enjoy the server')
 		except:
-			prettysend(channel, f"{member} has DMs closed btw")
+			await prettysend(channel, f"{member} has DMs closed btw")
 
 		role = discord.utils.get(member.guild.roles, name="Member")
 		if role:
