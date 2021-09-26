@@ -94,7 +94,7 @@ class Fun(commands.Cog):
 		try:
 			requestedsub = await reddit.subreddit(subreddit, fetch=True)
 		except:
-			await ctx.send("Could not find that subreddit",hidden=True)
+			await ctx.send("Could not find that subreddit")
 			return
 		
 		post = await requestedsub.random()

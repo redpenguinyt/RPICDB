@@ -35,13 +35,25 @@ class Suggested(commands.Cog):
 		await ctx.defer()
 		subreddit = await reddit.subreddit("AskReddit", fetch=True)
 		question = await subreddit.random()
-		await ctx.send(
-			embed=discord.Embed(
-				color=0xe74c3c,
-				title=question.title,
-			)
-		)
+		while question.over_18:
+			question = await subreddit.random()
+		await ctx.send(f"> {question.title}")
 	
+	@cog_ext.cog_subcommand(
+		base="suggested",
+        name="pickupline",
+        description="Get a random pickup line")
+	async def pickupline(self, ctx):
+		await ctx.defer()
+		subreddit = await reddit.subreddit("pickuplines", fetch=True)
+		pickupline = await subreddit.random()
+		while pickupline.over_18:
+			pickupline = await subreddit.random()
+		tosend = f"> {pickupline.title}"
+		if pickupline.selftext:
+			tosend += f"\n {pickupline.selftext}"
+		await ctx.send(tosend)
+
 	@cog_ext.cog_subcommand(
 		base="suggested",
         name="ppsize",

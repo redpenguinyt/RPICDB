@@ -63,5 +63,6 @@ Check out what I'm working on now on the [github project](https://github.com/red
 * `/suggested wheretofindtoxicwaste` - Where to hide toxic waste
 * `/suggested randomquestion` - Get a random question
 * `/suggested ppsize <user>` - Check a user's pp size
+* `/suggested pickupline` - Get a random pickup line!
 
 By the way RPICDB stands for Red Penguin Is Cool Discord Bot
