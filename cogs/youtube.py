@@ -1,7 +1,7 @@
 import discord, os, pyyoutube
 from discord.ext import commands, tasks
 from replit import db
-from utils import prettysend, config, getinfofromguild, editguildinfo
+from utils import config, getinfofromguild
 
 config = config()
 api = pyyoutube.Api(
@@ -21,17 +21,6 @@ def isNewVideo(channelid):
 		return
 	
 	return acts != prev_acts
-
-async def setchannelid(self, ctx, channelId=""):
-	if channelId == "":
-		await prettysend(ctx, "Disconnected YouTube Channel!", hidden=True)
-	else:
-		try:
-			channel = getytchannel(channelId)["snippet"]["title"]
-			await ctx.send(f"Connected to {channel}!", hidden=True)
-		except:
-			await ctx.send("No channel found!", hidden=True)
-	editguildinfo(ctx.guild.id, "channelid", channelId)
 
 class Youtube(commands.Cog):
 	"""Youtube upload commands"""

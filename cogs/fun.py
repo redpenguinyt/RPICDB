@@ -138,7 +138,9 @@ class Fun(commands.Cog):
 	
 	@cog_ext.cog_slash(description="Roll the dice!")
 	async def dice(self, ctx):
-		await prettysend(ctx, "Dice", random.randint(1,6))
+		await prettysend(ctx,
+			"Dice", str(random.randint(1,6))
+		)
 
 def setup(bot):
 	bot.add_cog(Fun(bot))

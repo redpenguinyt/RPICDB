@@ -1,3 +1,4 @@
+
 # RPICDB
 RPICDB is the everything discord bot for you your everything discord needs! It also supports slash commands! Neato!
 
@@ -14,55 +15,40 @@ Check out what I'm working on now on the [github project](https://github.com/red
 * A welcome message!
 
 ### Commands:
-
-#### Fun
-* `/8ball <question>` - Shake that 8ball for wisdom!
+	
+* `/help` - Get help
+* `/info ping` - Check the bot's latency
+* `/info servercount` - Checks how many users are in the server
+* `/info server` - Check info about current server
+* `/info user <user>` - Get info about a user!
+* `/info settings` - Check your server's settings
+* `/exp give <amount> [user]` - Give XP to a user
+* `/exp remove <amount> [user]` - Take XP from a user
+* `/exp top` - Check the levelling leaderboard
+* `/poll <question> <choice1> <choice2> [choice3] [choice4] [choice5]` - Create a poll. To vote, use reactions!
+* `/log channel` - Sends you a text file containing all messages in that channel
+* `/suggested pickupline` - Get a random pickup line
+* `/suggested ppsize <user>` - Check a user's pp size
+* `/suggested randomquestion` - Get a random question
+* `/suggested wheretohidetoxicwaste` - Where to hide toxic waste
+* `/mod ban <user> [reason]` - Ban a user
+* `/mod block <user>` - Block a user from the current channel
+* `/mod clear <limit>` - Bulk remove messages from the current channel
+* `/mod kick <user> [reason]` - Kick a user
+* `/mod mute <user> [reason]` - Mutes the specified user
+* `/mod nuke` - nuke the channel and make a copy
+* `/mod unblock <user>` - Unblock a use from the current channel
+* `/mod unmute <user>` - Unmute a user
 * `/choose <choice1> <choice2> [choice3] [choice4] [choice5]` - RPICDB will help you choose something!
-* `/compliment <user>` - Compliment someone!
+* `/compliment <target>` - Compliment someone!
 * `/dice` - Roll the dice!
+* `/8ball <question>` - Shake that 8ball for wisdom!
 * `/inspire` - Get an inspiring quote!
 * `/meme [subreddit]` - Post a meme!
 * `/poop` - poop
+* `/reverse <message>` - Reverse whatever you say!
 * `/rickroll` - Rickroll!
-* `/reverse <text>` - Reverse whatever you say!
-
-#### Info
-* `/info ping` - Check the bot's latency
-* `/info servercount` - Checks how many users are in the server
-* `/info server` - Get info about your server!
-* `/info user <user>` - Get info about a user!
-
-#### Levels
-* `/exp give <amount> [user]` - Give XP to a user
-* `/exp take <amount> [user]` - Take XP from a user
-* `/exp top` - Check the levelling leaderboard
-
-#### Logging
-* `/log channel` - Sends you a text file containing all messages in that channel
-
-#### Moderation
-* `/mod ban <user> [reason]` - Ban a user
-* `/mod clear [amount]` - Bulk remove messages from the current channel
-* `/mod mute <user> [reason]` - Mutes the specified user
-* `/mod nuke` - Nuke the channel and make a copy
-* `/mod block <user>` - Block a user from the current channel
-* `/mod kick <user> [reason]` - Kick a user
-* `/mod unblock <user>` - Unblock a user from the current channel
-* `/mod unmute <user>` - Unmute a user
-
-#### Polls
-* `/poll <question> <choice1> <choice2> [choice3] [choice4] [choice5]` - Create a poll. To vote, use reactions!
-
-#### Settings
-* `/settings setchannelid <youtube channel id>` - Set a YT channel id to get YouTube notifications!
-* `/settings togglelevels` - Toggle the levelling system in that server!
-* `/settings togglewelcome` - Toggle the welcome message in that server!
-* `/info settings` - Check you server's settings
-
-#### Suggested
-* `/suggested wheretofindtoxicwaste` - Where to hide toxic waste
-* `/suggested randomquestion` - Get a random question
-* `/suggested ppsize <user>` - Check a user's pp size
-* `/suggested pickupline` - Get a random pickup line!
+* `/afk [status]` - Set yourself as afk
+* `/settings` - Get a link to the dashboard
 
 By the way RPICDB stands for Red Penguin Is Cool Discord Bot
