@@ -44,7 +44,6 @@ Also send the error message below:
 
 	@commands.Cog.listener()
 	async def on_member_join(self, member: discord.Member):
-		print(f"{member.guild.name} > {member} > Joined the guild")
 		if not getinfofromguild(member.guild.id, "isWelcome"):
 			return
 
