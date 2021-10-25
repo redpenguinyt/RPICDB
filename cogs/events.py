@@ -16,8 +16,8 @@ class Events(commands.Cog):
 			await ctx.send("You don't have the right permissions!", hidden=True)
 		else:
 			await ctx.send("""
-An error occurred whilst processing your command. ;-;
-For help, and to report this as an issue, please join the testing server for this bot: https://discord.gg/C9E5EqaHR8
+```An error occurred whilst processing your command. ;-;```
+For help, and to report this as an issue, please join the testing server for this bot: <https://discord.gg/C9E5EqaHR8>
 Also send the error message below:
 			""", hidden=True)
 			if self.config["debug"]:
