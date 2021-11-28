@@ -1,4 +1,4 @@
-import discord, os, psutil
+import discord, os
 from datetime import datetime
 from discord.ext import commands
 from discord.ext.commands import errors
@@ -8,7 +8,6 @@ class Events(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 		self.config = config()
-		self.process = psutil.Process(os.getpid())
 
 	@commands.Cog.listener()
 	async def on_slash_command_error(self, ctx, error):
