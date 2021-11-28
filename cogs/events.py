@@ -1,8 +1,8 @@
-import discord, os
 from datetime import datetime
 from discord.ext import commands
 from discord.ext.commands import errors
 from utils import config, traceback_maker, getinfofromguild, prettysend
+import discord
 
 class Events(commands.Cog):
 	def __init__(self, bot):
