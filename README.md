@@ -25,12 +25,7 @@ Check out what I'm working on now on the [github project](https://github.com/red
 * `/exp give <amount> [user]` - Give XP to a user
 * `/exp remove <amount> [user]` - Take XP from a user
 * `/exp top` - Check the levelling leaderboard
-* `/poll <question> <choice1> <choice2> [choice3] [choice4] [choice5]` - Create a poll. To vote, use reactions!
 * `/log channel` - Sends you a text file containing all messages in that channel
-* `/suggested pickupline` - Get a random pickup line
-* `/suggested ppsize <user>` - Check a user's pp size
-* `/suggested randomquestion` - Get a random question
-* `/suggested wheretohidetoxicwaste` - Where to hide toxic waste
 * `/mod ban <user> [reason]` - Ban a user
 * `/mod block <user>` - Block a user from the current channel
 * `/mod clear <limit>` - Bulk remove messages from the current channel
@@ -50,5 +45,10 @@ Check out what I'm working on now on the [github project](https://github.com/red
 * `/rickroll` - Rickroll!
 * `/afk [status]` - Set yourself as afk
 * `/settings` - Get a link to the dashboard
+* `/suggested pickupline` - Get a random pickup line
+* `/suggested ppsize <user>` - Check a user's pp size
+* `/suggested randomquestion` - Get a random question
+* `/suggested wheretohidetoxicwaste` - Where to hide toxic waste
+* `/poll <question> <choice1> <choice2> [choice3] [choice4] [choice5]` - Create a poll. To vote, use reactions!
 
 By the way RPICDB stands for Red Penguin Is Cool Discord Bot
