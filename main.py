@@ -28,7 +28,7 @@ async def updatereadme(ctx):
 # RPICDB
 RPICDB is the everything discord bot for you your everything discord needs! It also supports slash commands! Neato!
 
-Check out what I'm working on now on the [github project](https://github.com/redpenguinyt/Discord-bot/projects/1)
+Check out what I'm working on now on the [github project](https://github.com/redpenguinyt/RPICDB/projects/1)
 
 ### Features:
 

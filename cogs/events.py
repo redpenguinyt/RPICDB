@@ -78,7 +78,7 @@ Also send the error message below:
 	@commands.Cog.listener()
 	async def on_slash_command(self, ctx):
 		args = ""
-		for i in ctx.args: args += f"{i}"
+		for i in ctx.args: args += f"{i} "
 
 		command = f"/{ctx.name} {args}"
 		if ctx.subcommand_name:
