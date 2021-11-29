@@ -6,12 +6,15 @@ from discord_slash import SlashCommand
 
 config = config()
 
+intents = discord.Intents.default()
+intents.members = True
+
 bot = commands.Bot(
     command_prefix = config["prefix"],
 	owner_ids = config["owners"],
 	help_command = None,
-	intents = discord.Intents().all(),
-	activity=discord.Game(name="the saxaphone")
+	intents = intents,
+	activity = discord.Game(name="the saxaphone")
 )
 slash = SlashCommand(bot, sync_commands=True)
 
