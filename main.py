@@ -30,6 +30,10 @@ RPICDB is the everything discord bot for you your everything discord needs! It a
 
 Check out what I'm working on now on the [github project](https://github.com/redpenguinyt/RPICDB/projects/1)
 
+<a href="https://top.gg/bot/823590391302717510">
+  <img src="https://top.gg/api/widget/823590391302717510.svg">
+</a>
+
 ### Features:
 
 * Mod commands - mute, clear, block, nuke, kick and ban
