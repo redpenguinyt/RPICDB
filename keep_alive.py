@@ -17,8 +17,5 @@ def url(url):
 		f"https://rpicdb-website.redpenguin.repl.co/{url}"
 	)
 
-def run():
-  app.run(host='0.0.0.0',port=8080)
-
 def keep_alive():
-	Thread(target=run).start()
+	Thread(target = lambda: app.run(host='0.0.0.0',port=8080)).start()

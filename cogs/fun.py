@@ -99,6 +99,10 @@ class Fun(commands.Cog):
 		
 		post = await requestedsub.random()
 
+		if post.over_18:
+			if not ctx.channel.is_nsfw():
+				return await ctx.send("The bot tried to send an nsfw command in a non-nsfw channel! If this was a mistake, run the command again")
+
 		embed = discord.Embed(title=post.title,color=0xe74c3c)
 		embed.set_image(url=post.url)
 		embed.set_footer(text=f"Credit to u/{post.author.name}")
