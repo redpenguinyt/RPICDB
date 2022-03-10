@@ -1,4 +1,4 @@
-import discord, os
+import discord, time, os
 from utils import config
 from keep_alive import keep_alive
 from discord.ext import commands
@@ -83,9 +83,10 @@ Check out what I'm working on now on the [github project](https://github.com/red
 		file.write(maintxt)
 	await ctx.send("Done!")
 
-
 keep_alive()
-try:
-	bot.run(os.environ['token'], reconnect=True)
-except Exception as e:
-	print(f"Error when logging in: {e}")
+while True:
+	try:
+		bot.run(os.environ['token'], reconnect=True)
+	except Exception as e:
+		print(f"Error when logging in: {str(e).split(': <!DOCT')[0]}")
+	time.sleep(3)
