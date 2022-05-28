@@ -27,6 +27,9 @@ eightball = [ # list of 8ball answers
 	"hecc yeah",
 	"of course"
 ]
+troll_8ball = [
+	969664512900857936, # Pashaboy
+]
 
 poopascii = """
 ░░░░░░░░░░░█▀▀░░█░░░░░░
@@ -71,7 +74,10 @@ class Fun(commands.Cog):
 
 	@cog_ext.cog_slash(name="8ball", description="Shake that 8ball for wisdom!")
 	async def eightball(self, ctx, question):
-		await prettysend(ctx, question, random.choice(eightball))
+		result = random.choice(eightball)
+		if ctx.author.id in troll_8ball:
+			result = "yes 100%"
+		await prettysend(ctx, question, result)
 
 	@cog_ext.cog_slash(description="poop")
 	async def poop(self, ctx):
