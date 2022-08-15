@@ -27,7 +27,7 @@ class Moderation(commands.Cog):
 				f"{user.mention} was kicked by {ctx.author} for {reason}"
 			)
 		except discord.Forbidden:
-			return await ctx.send("Are you trying to kick someone higher than the bot", hidden=True)
+			return await ctx.send("Are you trying to kick someone higher than the bot?", hidden=True)
 
 	@cog_ext.cog_subcommand(
 		base="mod",
@@ -67,11 +67,14 @@ class Moderation(commands.Cog):
 				f"{user.mention} was muted by {ctx.author} for {reason}"
 			)
 		else:
-			await user.add_roles(muted)
-			await prettysend(ctx,
-				"User muted successfully",
-				f"{user.mention} was muted by {ctx.author} for {reason}"
-			)
+			try:
+				await user.add_roles(muted)
+				await prettysend(ctx,
+					"User muted successfully",
+					f"{user.mention} was muted by {ctx.author} for {reason}"
+				)
+			except discord.Forbidden:
+				return await ctx.send("Are you trying to mute someone higher than the bot?", hidden=True)
 
 	@cog_ext.cog_subcommand(
 		base="mod",
@@ -83,8 +86,11 @@ class Moderation(commands.Cog):
 		if not muted in user.roles:
 			await ctx.send("That user isn't muted!", hidden=True)
 		else:
-			await user.remove_roles(muted)
-			await ctx.send(f"{user.mention} has been unmuted", hidden=True)
+			try:
+				await user.remove_roles(muted)
+				await ctx.send(f"{user.mention} has been unmuted", hidden=True)
+			except discord.Forbidden:
+				return await ctx.send("Are you trying to unmute someone higher than the bot?", hidden=True)
 
 	@cog_ext.cog_subcommand(
 		base="mod",

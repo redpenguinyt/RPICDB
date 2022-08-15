@@ -12,7 +12,7 @@ class Owner(commands.Cog, command_attrs=dict(hidden=True)):
 	async def test(self,ctx):
 		await ctx.reply("I'm connected! :D")
 
-	@commands.command()
+	@commands.command(aliases=["rnmchnl"])
 	@commands.guild_only()
 	@commands.is_owner()
 	async def renamechannel(self, ctx, *, new_name):

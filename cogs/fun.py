@@ -1,6 +1,6 @@
 import discord, os, random, asyncpraw, requests, json
 from discord.ext import commands
-from utils import getinfofromguild, prettysend
+from utils import prettysend
 from discord_slash import cog_ext
 
 reddit = asyncpraw.Reddit(
@@ -8,6 +8,29 @@ reddit = asyncpraw.Reddit(
     client_secret=os.environ['reddit_secret'],
     user_agent=os.environ['reddit_user_agent'],
 )
+
+async def find_meme(ctx, subreddit):
+	try:
+		requestedsub = await reddit.subreddit(subreddit) # , fetch=True
+	except:
+		await ctx.send("Could not find that subreddit")
+		return 1
+
+	post = await requestedsub.random()
+	i = 0
+	while not post or post.is_self or post.url.startswith("https://v."):
+		i += 1
+		if i > 10:
+			await ctx.send("Could not find an image post on that subreddit")
+			return 1
+		post = await requestedsub.random()
+	
+	if post.over_18:
+		if not ctx.channel.is_nsfw():
+			await ctx.send("The bot tried to send an nsfw command in a non-nsfw channel! If this was a mistake, run the command again")
+			return 1
+
+	return post
 
 compliments = [  # List of encouragements
     "%s is amazing!",
@@ -26,9 +49,6 @@ eightball = [ # list of 8ball answers
 	"kinda",
 	"hecc yeah",
 	"of course"
-]
-troll_8ball = [
-	969664512900857936, # Pashaboy
 ]
 
 poopascii = """
@@ -75,8 +95,6 @@ class Fun(commands.Cog):
 	@cog_ext.cog_slash(name="8ball", description="Shake that 8ball for wisdom!")
 	async def eightball(self, ctx, question):
 		result = random.choice(eightball)
-		if ctx.author.id in troll_8ball:
-			result = "yes 100%"
 		await prettysend(ctx, question, result)
 
 	@cog_ext.cog_slash(description="poop")
@@ -90,28 +108,16 @@ class Fun(commands.Cog):
 
 	@cog_ext.cog_slash(description="Post a meme!")
 	async def meme(self, ctx, subreddit="memes"):
-		if not getinfofromguild(ctx.guild.id, "premium") and subreddit != "memes":
-			subreddit = "memes"
-			await ctx.send("Custom subreddits require premium! In the meantime, enjoy a meme from r/memes",hidden=True)
-		
 		await ctx.defer()
 
-		requestedsub = None
-		try:
-			requestedsub = await reddit.subreddit(subreddit, fetch=True)
-		except:
-			await ctx.send("Could not find that subreddit")
+		meme = await find_meme(ctx, subreddit)
+
+		if meme == 1:
 			return
-		
-		post = await requestedsub.random()
 
-		if post.over_18:
-			if not ctx.channel.is_nsfw():
-				return await ctx.send("The bot tried to send an nsfw command in a non-nsfw channel! If this was a mistake, run the command again")
-
-		embed = discord.Embed(title=post.title,color=0xe74c3c)
-		embed.set_image(url=post.url)
-		embed.set_footer(text=f"Credit to u/{post.author.name}")
+		embed = discord.Embed(title=meme.title,color=0xe74c3c)
+		embed.set_image(url=meme.url)
+		embed.set_footer(text=f"Credit to u/{meme.author.name}")
 		await ctx.send(embed=embed)
 	
 	@cog_ext.cog_slash(description='Rickroll!')

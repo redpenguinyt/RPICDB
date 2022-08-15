@@ -13,11 +13,24 @@ def write_json(filename, contents):
         json.dump(contents, outfile, ensure_ascii=True, indent=4)
 
 def config(filename: str = "config"):
-    try:
-        with open(f"{filename}.json", encoding='utf8') as data:
-            return json.load(data)
-    except FileNotFoundError:
-        raise FileNotFoundError("JSON file wasn't found")
+    return {
+	    "description": "Red Penguin Is Cool Discord Bot",
+	    "owners": [
+	        666323445453291561,
+			714453553619664947
+	    ],
+	    "defaultguild": {
+	        "premium": True,
+	        "channelid": "",
+	        "isLevels": True,
+	        "isWelcome": True,
+	        "users": {}
+	    },
+	    "prefix": "$",
+	    "version": "0.9.5",
+	    "lvlmultiplier": 50,
+	    "debug": True
+	}
 
 def getinfofromguild(guildid, key):
 	if guildsdb.find_one({"_id":guildid}):
