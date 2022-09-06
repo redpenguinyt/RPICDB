@@ -2,7 +2,6 @@ import discord, time, os
 from utils import config
 from keep_alive import keep_alive
 from discord.ext import commands
-from discord import app_commands
 
 config = config()
 TEST_GUILD = discord.Object(id=config["test_guild_id"])

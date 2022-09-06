@@ -126,28 +126,26 @@ class Owner(commands.Cog, command_attrs=dict(hidden=True)):
 	@commands.command()
 	@commands.is_owner()
 	async def updatereadme(self, ctx):
-		maintxt = """
-	# RPICDB
-	RPICDB is the everything discord bot for you your everything discord needs! It also supports slash commands! Neato!
-	
-	Check out what I'm working on now on the [github project](https://github.com/redpenguinyt/RPICDB/projects/1)
-	
-	<a href="https://top.gg/bot/823590391302717510">
-	  <img src="https://top.gg/api/widget/823590391302717510.svg">
-	</a>
-	
-	### Features:
-	
-	* Mod commands - mute, clear, block, nuke, kick and ban
-	* Toggleable levelling system with leaderboard
-	* Fun commands! Memes, poop, rickrolls!
-	* Utility commands! Get information about users and your server, and more!
-	* Youtube notifications! Set a yt channel id and get notified of your favourite youtuber's uploads!
-	* Polls! Create reaction polls
-	* A welcome message!
-	
-	### Commands:
-		"""
+		maintxt = """# RPICDB
+RPICDB is the everything discord bot for you your everything discord needs! It also supports slash commands! Neato!
+
+Check out what I'm working on now on the [github project](https://github.com/redpenguinyt/RPICDB/projects/1)
+
+<a href="https://top.gg/bot/823590391302717510">
+  <img src="https://top.gg/api/widget/823590391302717510.svg">
+</a>
+
+### Features:
+
+* Mod commands - mute, clear, block, nuke, kick and ban
+* Toggleable levelling system with leaderboard
+* Fun commands! Memes, poop, rickrolls!
+* Utility commands! Get information about users and your server, and more!
+* Youtube notifications! Set a yt channel id and get notified of your favourite youtuber's uploads!
+* Polls! Create reaction polls
+* A welcome message!
+
+### Commands:"""
 		allcommands = await self.bot.tree.fetch_commands()
 		for cmd in allcommands:
 			if cmd.type != discord.AppCommandType.chat_input:
@@ -181,10 +179,9 @@ class Owner(commands.Cog, command_attrs=dict(hidden=True)):
 				maintxt += f"\n{cmd_to_txt}"
 		
 		maintxt += "\n\nBy the way RPICDB stands for Red Penguin Is Cool Discord Bot"
-		print(maintxt)
 		with open("README.md", 'w') as file:
 			file.write(maintxt)
-		await ctx.send("Done!")
+			await ctx.send("Done!", file=discord.File(file, "README.md"))
 
 async def setup(bot):
 	await bot.add_cog(Owner(bot))

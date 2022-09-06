@@ -1,7 +1,6 @@
 from discord.ext import commands
 from discord import app_commands
 from replit import db
-import discord
 
 def setAFK(userid, status):
 	if status == None:

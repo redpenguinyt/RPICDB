@@ -28,7 +28,6 @@ def config(filename: str = "config"):
 	    },
 		"test_guild_id": 858031893471559711,
 	    "prefix": "$",
-	    "version": "0.9.5",
 	    "lvlmultiplier": 50
 	}
 
