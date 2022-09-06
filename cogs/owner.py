@@ -123,5 +123,68 @@ class Owner(commands.Cog, command_attrs=dict(hidden=True)):
 			ctx.send("Failed")
 		await ctx.send(result)
 
-def setup(bot):
-	bot.add_cog(Owner(bot))
+	@commands.command()
+	@commands.is_owner()
+	async def updatereadme(self, ctx):
+		maintxt = """
+	# RPICDB
+	RPICDB is the everything discord bot for you your everything discord needs! It also supports slash commands! Neato!
+	
+	Check out what I'm working on now on the [github project](https://github.com/redpenguinyt/RPICDB/projects/1)
+	
+	<a href="https://top.gg/bot/823590391302717510">
+	  <img src="https://top.gg/api/widget/823590391302717510.svg">
+	</a>
+	
+	### Features:
+	
+	* Mod commands - mute, clear, block, nuke, kick and ban
+	* Toggleable levelling system with leaderboard
+	* Fun commands! Memes, poop, rickrolls!
+	* Utility commands! Get information about users and your server, and more!
+	* Youtube notifications! Set a yt channel id and get notified of your favourite youtuber's uploads!
+	* Polls! Create reaction polls
+	* A welcome message!
+	
+	### Commands:
+		"""
+		allcommands = await self.bot.tree.fetch_commands()
+		for cmd in allcommands:
+			if cmd.type != discord.AppCommandType.chat_input:
+				continue # add only slash commands
+			
+			if cmd.options == []:
+				cmd_to_txt = f"* `/{cmd.name}` - {cmd.description}"
+				maintxt += f"\n{cmd_to_txt}"
+			elif isinstance(cmd.options[0], discord.app_commands.AppCommandGroup): # is subcommand
+				for subcmd in cmd.options:
+					cmd_to_txt = "* `"
+					if subcmd.options == []:
+						cmd_to_txt += f"/{subcmd.qualified_name}` - {subcmd.description}"
+					else:
+						cmd_to_txt += f"/{subcmd.qualified_name}"
+						for option in subcmd.options:
+							if option.required:
+							 	cmd_to_txt += f" <{option.name}>"
+							else:
+							 	cmd_to_txt += f" [{option.name}]"
+						cmd_to_txt += f"` - {subcmd.description}"
+					maintxt += f"\n{cmd_to_txt}"
+			else:
+				cmd_to_txt = f"* `/{cmd.name}"
+				for option in cmd.options:
+					if option.required:
+						cmd_to_txt += f" <{option.name}>"
+					else:
+						cmd_to_txt += f" [{option.name}]"
+				cmd_to_txt += f"` - {cmd.description}"
+				maintxt += f"\n{cmd_to_txt}"
+		
+		maintxt += "\n\nBy the way RPICDB stands for Red Penguin Is Cool Discord Bot"
+		print(maintxt)
+		with open("README.md", 'w') as file:
+			file.write(maintxt)
+		await ctx.send("Done!")
+
+async def setup(bot):
+	await bot.add_cog(Owner(bot))

@@ -1,7 +1,7 @@
 import discord, os, random, asyncpraw, requests, json
 from discord.ext import commands
 from utils import prettysend
-from discord_slash import cog_ext
+from discord import app_commands
 
 reddit = asyncpraw.Reddit(
     client_id=os.environ['reddit_id'],
@@ -13,7 +13,7 @@ async def find_meme(ctx, subreddit):
 	try:
 		requestedsub = await reddit.subreddit(subreddit) # , fetch=True
 	except:
-		await ctx.send("Could not find that subreddit")
+		await ctx.response.send_message("Could not find that subreddit")
 		return 1
 
 	post = await requestedsub.random()
@@ -21,13 +21,13 @@ async def find_meme(ctx, subreddit):
 	while not post or post.is_self or post.url.startswith("https://v."):
 		i += 1
 		if i > 10:
-			await ctx.send("Could not find an image post on that subreddit")
+			await ctx.response.send_message("Could not find an image post on that subreddit")
 			return 1
 		post = await requestedsub.random()
 	
 	if post.over_18:
 		if not ctx.channel.is_nsfw():
-			await ctx.send("The bot tried to send an nsfw command in a non-nsfw channel! If this was a mistake, run the command again")
+			await ctx.response.send_message("The bot tried to send an nsfw command in a non-nsfw channel! If this was a mistake, run the command again")
 			return 1
 
 	return post
@@ -92,23 +92,23 @@ class Fun(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
-	@cog_ext.cog_slash(name="8ball", description="Shake that 8ball for wisdom!")
-	async def eightball(self, ctx, question):
+	@app_commands.command(name="8ball", description="Shake that 8ball for wisdom!")
+	async def eightball(self, ctx, question: str):
 		result = random.choice(eightball)
-		await prettysend(ctx, question, result)
+		await prettysend(ctx, f"{ctx.user} asked \"{question}\"", result)
 
-	@cog_ext.cog_slash(description="poop")
+	@app_commands.command(description="poop")
 	async def poop(self, ctx):
-		await ctx.send(
+		await ctx.response.send_message(
 			embed=discord.Embed(color=0xe74c3c,
 			title="Poop", 
 			description = poopascii
 			)
 		)
 
-	@cog_ext.cog_slash(description="Post a meme!")
-	async def meme(self, ctx, subreddit="memes"):
-		await ctx.defer()
+	@app_commands.command(description="Post a meme!")
+	async def meme(self, ctx, subreddit:str="memes"):
+		await ctx.response.defer(thinking=True)
 
 		meme = await find_meme(ctx, subreddit)
 
@@ -118,9 +118,9 @@ class Fun(commands.Cog):
 		embed = discord.Embed(title=meme.title,color=0xe74c3c)
 		embed.set_image(url=meme.url)
 		embed.set_footer(text=f"Credit to u/{meme.author.name}")
-		await ctx.send(embed=embed)
+		await ctx.followup.send(embed=embed)
 	
-	@cog_ext.cog_slash(description='Rickroll!')
+	@app_commands.command(description='Rickroll!')
 	async def rickroll(self, ctx):
 		embed = discord.Embed(
 			title='Rickroll posted',
@@ -130,33 +130,33 @@ class Fun(commands.Cog):
 
 		rickroll = random.choice(rickrollmsgs) % f"<{random.choice(rickrolllinks)}>"
 		await ctx.channel.send(rickroll)
-		await ctx.send(embed=embed, hidden=True)
+		await ctx.response.send_message(embed=embed, ephemeral=True)
 		
-	@cog_ext.cog_slash(description="Reverse whatever you say!")
-	async def reverse(self, ctx, *, message):
+	@app_commands.command(description="Reverse whatever you say!")
+	async def reverse(self, ctx, message: str):
 		await prettysend(ctx, message[::-1])
 
-	@cog_ext.cog_slash(description="Get an inspiring quote!")
+	@app_commands.command(description="Get an inspiring quote!")
 	async def inspire(self, ctx):
 		await prettysend(ctx, get_quote())
 
-	@cog_ext.cog_slash(description="Compliment someone!")
-	async def compliment(self, ctx, target: discord.Member):
+	@app_commands.command(description="Compliment someone!")
+	async def compliment(self, ctx, target:discord.Member):
 		await prettysend(ctx, "", random.choice(compliments) % target.mention)
 	
-	@cog_ext.cog_slash(description="RPICDB will help you choose something!")
-	async def choose(self, ctx, choice1, choice2, choice3="", choice4="", choice5=""):
+	@app_commands.command(description="RPICDB will help you choose something!")
+	async def choose(self, ctx, choice1:str, choice2:str, choice3:str="", choice4:str="", choice5:str=""):
 		choices = [choice1,choice2,choice3,choice4,choice5]
 		for choice in choices:
 			if choice == "":
 				choices.pop(choices.index(choice))
 		await prettysend(ctx, random.choice(choices))
 	
-	@cog_ext.cog_slash(description="Roll the dice!")
+	@app_commands.command(description="Roll the dice!")
 	async def dice(self, ctx):
 		await prettysend(ctx,
 			"Dice", str(random.randint(1,6))
 		)
 
-def setup(bot):
-	bot.add_cog(Fun(bot))
+async def setup(bot):
+	await bot.add_cog(Fun(bot))

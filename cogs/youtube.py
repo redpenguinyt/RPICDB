@@ -52,5 +52,5 @@ async def checkforupload(self):
 				try: await sent.publish()
 				except: pass
 
-def setup(bot):
-    bot.add_cog(Youtube(bot))
+async def setup(bot):
+    await bot.add_cog(Youtube(bot))

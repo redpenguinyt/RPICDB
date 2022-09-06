@@ -1,24 +1,16 @@
 import discord
 from discord.ext import commands
-from utils import config, getinfofromguild
-from cogs import youtube as yt
-from discord_slash import cog_ext
+from utils import getinfofromguild
+from discord import app_commands
 
 class Settings(commands.Cog):
-	"""Configure the bot - Administrator only"""
+	"""Dashboard Portal"""
 
 	def __init__(self, bot):
 		self.bot = bot
 	
-	@cog_ext.cog_slash(description="Get a link to the dashboard")
+	@app_commands.command(description="Check your server's settings")
 	async def settings(self, ctx):
-		await ctx.send("Go to https://rpicdb.redpenguin.repl.co/dashboard and log in with discord to make changes to settings in your bot!")
-	
-	@cog_ext.cog_subcommand(
-		base="info",
-        name="settings",
-        description="Check your server's settings")
-	async def settingsinfo(self, ctx):
 		guild = getinfofromguild(ctx.guild.id, "all")
 
 		# The user doesn't need to see these
@@ -29,14 +21,14 @@ class Settings(commands.Cog):
 		settings = "Edit your settings at https://rpicdb.redpenguin.repl.co/dashboard\n"
 		for item in guild:
 			settings += f"**{item}**: {guild[item]}\n"
-		await ctx.send(
+		await ctx.response.send_message(
 			embed = discord.Embed(
 				color=0xe74c3c,
 				title="Settings",
 				description=settings
 			),
-			hidden=True
+			ephemeral=True
 		)
 
-def setup(bot):
-	bot.add_cog(Settings(bot))
+async def setup(bot):
+	await bot.add_cog(Settings(bot))

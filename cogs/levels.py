@@ -1,7 +1,7 @@
 import discord, random
 from discord.ext import commands
 from utils import config, prettysend, getinfofromguild, guildsdb, addguildtocollection, editguildinfo
-from discord_slash import cog_ext
+from discord import app_commands
 
 config = config()
 
@@ -38,23 +38,26 @@ async def level_up(user: discord.Member, ctx):
 	users = getinfofromguild(user.guild.id, "users")
 	old_lvl = users[f"{user.id}"]['level']
 	lvl_lmt = old_lvl * config["lvlmultiplier"]
+	
 	while users[f"{user.id}"]['xp'] >= lvl_lmt:
 		users[f"{user.id}"]['xp'] = users[f"{user.id}"]['xp'] - lvl_lmt
 		users[f"{user.id}"]['level'] += 1
+		old_lvl += 1
+		
 	if users[f"{user.id}"]['level'] != old_lvl:
 		embed = discord.Embed(
 			title = "Level Up!",
 			description = f"GG, {user.mention}! You\'ve leveled up to level {users[f'{user.id}']['level']}",
 			color=0xe74c3c
 		)
-		embed.set_thumbnail(url=user.avatar_url)
+		embed.set_thumbnail(url=user.avatar.url)
 		await ctx.channel.send(embed=embed)
 	
 	editguildinfo(ctx.guild.id, "users", users)
 
 		
 	
-class Levels(commands.Cog):
+class Levels(commands.GroupCog, name="exp"):
 	"""Levels"""
 
 	def __init__(self, bot):
@@ -75,39 +78,34 @@ class Levels(commands.Cog):
 			add_xp(msg.author, random.randint(3,8))
 			await level_up(msg.author, msg)
 	
-	@cog_ext.cog_subcommand(
-		base="exp",
+	@app_commands.command(
         name="give",
         description="Give XP to a user")
-	@commands.has_permissions(manage_messages=True)
+	@app_commands.checks.has_permissions(manage_messages=True)
 	async def givexp(self, ctx, amount: int, user: discord.Member=None):
-		if not user:
-			user = ctx.author
+		user = user or ctx.user
 
 		add_xp(user, amount)
 		await level_up(user, ctx)
 
-		await ctx.send(f"Gave {amount} XP to {user.mention}",hidden=True)
+		await ctx.response.send_message(f"Gave {amount} XP to {user.mention}",ephemeral=True)
 	
-	@cog_ext.cog_subcommand(
-		base="exp",
+	@app_commands.command(
         name="remove",
         description="Take XP from a user")
-	@commands.has_permissions(manage_messages=True)
-	async def takexp(self, ctx, amount: int, user: discord.Member=None):
-		if not user:
-			user = ctx.author
+	@app_commands.checks.has_permissions(manage_messages=True)
+	async def removexp(self, ctx, amount: int, user: discord.Member=None):
+		user = user or ctx.user
 
 		remove_xp(user, amount)
 		await level_up(user, ctx)
 
-		await ctx.reply(f"Took {amount} XP from {user.mention}")
+		await ctx.response.send_message(f"Took {amount} XP from {user.mention}",ephemeral=True)
 
-	@cog_ext.cog_subcommand(
-		base="exp",
+	@app_commands.command(
         name="top",
         description="Check the levelling leaderboard")
-	async def top(self, ctx):
+	async def topxp(self, ctx):
 		users = getinfofromguild(ctx.guild.id, "users")
 		topusers = sorted(users.items(), key= lambda x: (x[1]['level']), reverse=True)[:5]
 		tosend = ""
@@ -122,5 +120,5 @@ class Levels(commands.Cog):
 			i += 1
 		await prettysend(ctx, "Top level members", tosend)
 
-def setup(bot):
-    bot.add_cog(Levels(bot))
+async def setup(bot):
+    await bot.add_cog(Levels(bot))

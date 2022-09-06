@@ -1,25 +1,34 @@
 
-# RPICDB
-RPICDB is the everything discord bot for you your everything discord needs! It also supports slash commands! Neato!
-
-Check out what I'm working on now on the [github project](https://github.com/redpenguinyt/RPICDB/projects/1)
-
-<a href="https://top.gg/bot/823590391302717510">
-  <img src="https://top.gg/api/widget/823590391302717510.svg">
-</a>
-
-### Features:
-
-* Mod commands - mute, clear, block, nuke, kick and ban
-* Toggleable levelling system with leaderboard
-* Fun commands! Memes, poop, rickrolls!
-* Utility commands! Get information about users and your server, and more!
-* Youtube notifications! Set a yt channel id and get notified of your favourite youtuber's uploads!
-* Polls! Create reaction polls
-* A welcome message!
-
-### Commands:
+	# RPICDB
+	RPICDB is the everything discord bot for you your everything discord needs! It also supports slash commands! Neato!
 	
+	Check out what I'm working on now on the [github project](https://github.com/redpenguinyt/RPICDB/projects/1)
+	
+	<a href="https://top.gg/bot/823590391302717510">
+	  <img src="https://top.gg/api/widget/823590391302717510.svg">
+	</a>
+	
+	### Features:
+	
+	* Mod commands - mute, clear, block, nuke, kick and ban
+	* Toggleable levelling system with leaderboard
+	* Fun commands! Memes, poop, rickrolls!
+	* Utility commands! Get information about users and your server, and more!
+	* Youtube notifications! Set a yt channel id and get notified of your favourite youtuber's uploads!
+	* Polls! Create reaction polls
+	* A welcome message!
+	
+	### Commands:
+		
+* `/choose <choice1> <choice2> [choice3] [choice4] [choice5]` - RPICDB will help you choose something!
+* `/compliment <target>` - Compliment someone!
+* `/dice` - Roll the dice!
+* `/8ball <question>` - Shake that 8ball for wisdom!
+* `/inspire` - Get an inspiring quote!
+* `/meme [subreddit]` - Post a meme!
+* `/poop` - poop
+* `/reverse <message>` - Reverse whatever you say!
+* `/rickroll` - Rickroll!
 * `/help` - Get help
 * `/info ping` - Check the bot's latency
 * `/info servercount` - Checks how many users are in the server
@@ -38,21 +47,12 @@ Check out what I'm working on now on the [github project](https://github.com/red
 * `/mod nuke` - nuke the channel and make a copy
 * `/mod unblock <user>` - Unblock a use from the current channel
 * `/mod unmute <user>` - Unmute a user
-* `/choose <choice1> <choice2> [choice3] [choice4] [choice5]` - RPICDB will help you choose something!
-* `/compliment <target>` - Compliment someone!
-* `/dice` - Roll the dice!
-* `/8ball <question>` - Shake that 8ball for wisdom!
-* `/inspire` - Get an inspiring quote!
-* `/meme [subreddit]` - Post a meme!
-* `/poop` - poop
-* `/reverse <message>` - Reverse whatever you say!
-* `/rickroll` - Rickroll!
-* `/afk [status]` - Set yourself as afk
-* `/settings` - Get a link to the dashboard
+* `/poll <question> <choice1> <choice2> [choice3] [choice4] [choice5]` - Create a poll. To vote, use reactions!
 * `/suggested pickupline` - Get a random pickup line
 * `/suggested ppsize <user>` - Check a user's pp size
 * `/suggested randomquestion` - Get a random question
 * `/suggested wheretohidetoxicwaste` - Where to hide toxic waste
-* `/poll <question> <choice1> <choice2> [choice3] [choice4] [choice5]` - Create a poll. To vote, use reactions!
+* `/afk [status]` - Set yourself as afk
+* `/settings` - Get a link to the dashboard
 
 By the way RPICDB stands for Red Penguin Is Cool Discord Bot

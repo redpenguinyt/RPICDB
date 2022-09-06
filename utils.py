@@ -26,10 +26,10 @@ def config(filename: str = "config"):
 	        "isWelcome": True,
 	        "users": {}
 	    },
+		"test_guild_id": 858031893471559711,
 	    "prefix": "$",
 	    "version": "0.9.5",
-	    "lvlmultiplier": 50,
-	    "debug": True
+	    "lvlmultiplier": 50
 	}
 
 def getinfofromguild(guildid, key):
@@ -53,14 +53,14 @@ def editguildinfo(guildid, key, newvalue):
 		upsert = True
 	)
 
-async def prettysend(ctx, text, description=None):
+async def prettysend(interaction, text, description=None):
 	embed = discord.Embed(
 		title = text,
 		color=0xe74c3c
 	)
 	if description:
 		embed.description = description
-	await ctx.send(embed=embed)
+	await interaction.response.send_message(embed=embed)
 
 def traceback_maker(err, advance: bool = True):
     _traceback = ''.join(traceback.format_tb(err.__traceback__))
