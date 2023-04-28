@@ -24,7 +24,6 @@ Check out what I'm working on now on the [github project](https://github.com/red
 * `/8ball <question>` - Shake that 8ball for wisdom!
 * `/inspire` - Get an inspiring quote!
 * `/meme [subreddit]` - Post a meme!
-* `/poop` - poop
 * `/reverse <message>` - Reverse whatever you say!
 * `/rickroll` - Rickroll!
 * `/help` - Stop it. Get some help

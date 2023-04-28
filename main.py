@@ -1,7 +1,7 @@
 import discord, os
 from utils import config
-from keep_alive import keep_alive
 from discord.ext import commands
+from secret_manager import DISCORD_TOKEN
 
 config = config()
 TEST_GUILD = discord.Object(id=config["test_guild_id"])
@@ -33,9 +33,8 @@ class MyBot(commands.Bot):
 bot = MyBot()
 
 print("Starting...")
-keep_alive()
 try:
-	bot.run(os.environ['token'], reconnect=True)
+	bot.run(DISCORD_TOKEN, reconnect=True)
 except discord.errors.HTTPException:
 	print("Too Many Requests - killing")
 	os.system("python restarter.py")

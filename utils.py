@@ -1,7 +1,10 @@
-import discord, json, traceback, os
+import discord, json, traceback
 import pymongo
+from secret_manager import MONGO_URL
 
-client = pymongo.MongoClient(os.environ['mongo_url'])
+client = pymongo.MongoClient(MONGO_URL)
+channelsdb = client.RPICDB.yt_channels
+afkdb = client.RPICDB.afk
 guildsdb = client.RPICDB.guilds
 
 def load_json(filename):
@@ -12,7 +15,7 @@ def write_json(filename, contents):
     with open(filename, 'w') as outfile:
         json.dump(contents, outfile, ensure_ascii=True, indent=4)
 
-def config(filename: str = "config"):
+def config():
     return {
 	    "description": "Red Penguin Is Cool Discord Bot",
 	    "owners": [
@@ -31,8 +34,31 @@ def config(filename: str = "config"):
 	    "lvlmultiplier": 50
 	}
 
+def update_channel(channelid, acts):
+	if r := channelsdb.find_one_and_update({"_id": channelid}, {"$set": {"acts": acts}}):
+		return r['acts']
+	else:
+		channelsdb.insert_one({
+			'_id': channelid,
+			'acts': acts
+		})
+		return None
+
+def set_afk(userid, status):
+	if status is None:
+		afkdb.find_one_and_delete({'_id': userid})
+	else:
+		afkdb.find_one_and_update(
+			{'_id': userid},
+			{"$set":{'status': status}},
+			upsert = True
+		)
+
+def get_afk(userid):
+	return afkdb.find_one({'_id': userid})
+
 def getinfofromguild(guildid, key):
-	if guildsdb.find_one({"_id":guildid}):
+	if guildsdb.find_one({"_id": guildid}):
 		if key == "all":
 			return guildsdb.find_one({"_id":guildid})
 		return guildsdb.find_one({"_id":guildid})[key]

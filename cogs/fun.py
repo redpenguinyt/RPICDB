@@ -1,12 +1,13 @@
-import discord, os, random, asyncpraw, requests, json
+import discord, random, asyncpraw, requests, json
 from discord.ext import commands
 from utils import prettysend
 from discord import app_commands
+from secret_manager import REDDIT_ID, REDDIT_SECRET, REDDIT_USER_AGENT
 
 reddit = asyncpraw.Reddit(
-    client_id=os.environ['reddit_id'],
-    client_secret=os.environ['reddit_secret'],
-    user_agent=os.environ['reddit_user_agent'],
+    client_id=REDDIT_ID,
+    client_secret=REDDIT_SECRET,
+    user_agent=REDDIT_USER_AGENT,
 )
 
 async def find_meme(ctx, subreddit):
@@ -24,7 +25,7 @@ async def find_meme(ctx, subreddit):
 			await ctx.response.send_message("Could not find an image post on that subreddit")
 			return 1
 		post = await requestedsub.random()
-	
+
 	if post.over_18:
 		if not ctx.channel.is_nsfw():
 			await ctx.response.send_message("The bot tried to send an nsfw command in a non-nsfw channel! If this was a mistake, run the command again")
@@ -50,21 +51,6 @@ eightball = [ # list of 8ball answers
 	"hecc yeah",
 	"of course"
 ]
-
-poopascii = """
-░░░░░░░░░░░█▀▀░░█░░░░░░
-░░░░░░▄▀▀▀▀░░░░░█▄▄░░░░
-░░░░░░█░█░░░░░░░░░░▐░░░
-░░░░░░▐▐░░░░░░░░░▄░▐░░░
-░░░░░░█░░░░░░░░▄▀▀░▐░░░
-░░░░▄▀░░░░░░░░▐░▄▄▀░░░░
-░░▄▀░░░▐░░░░░█▄▀░▐░░░░░
-░░█░░░▐░░░░░░░░▄░█░░░░░
-░░░█▄░░▀▄░░░░▄▀▐░█░░░░░
-░░░█▐▀▀▀░▀▀▀▀░░▐░█░░░░░
-░░▐█▐▄░░▀░░░░░░▐░█▄▄░░
-░░░▀▀░▄POOP▄░░░▐▄▄▄▀░░░
-"""
 
 rickrollmsgs = [
 	"I found this cool thing %s",
@@ -97,15 +83,6 @@ class Fun(commands.Cog):
 		result = random.choice(eightball)
 		await prettysend(ctx, f"{ctx.user} asked \"{question}\"", result)
 
-	@app_commands.command(description="poop")
-	async def poop(self, ctx):
-		await ctx.response.send_message(
-			embed=discord.Embed(color=0xe74c3c,
-			title="Poop", 
-			description = poopascii
-			)
-		)
-
 	@app_commands.command(description="Post a meme!")
 	async def meme(self, ctx, subreddit:str="memes"):
 		await ctx.response.defer(thinking=True)
@@ -119,7 +96,7 @@ class Fun(commands.Cog):
 		embed.set_image(url=meme.url)
 		embed.set_footer(text=f"Credit to u/{meme.author.name}")
 		await ctx.followup.send(embed=embed)
-	
+
 	@app_commands.command(description='Rickroll!')
 	async def rickroll(self, ctx):
 		embed = discord.Embed(
@@ -131,7 +108,7 @@ class Fun(commands.Cog):
 		rickroll = random.choice(rickrollmsgs) % f"<{random.choice(rickrolllinks)}>"
 		await ctx.channel.send(rickroll)
 		await ctx.response.send_message(embed=embed, ephemeral=True)
-		
+
 	@app_commands.command(description="Reverse whatever you say!")
 	async def reverse(self, ctx, message: str):
 		await prettysend(ctx, message[::-1])
@@ -143,7 +120,7 @@ class Fun(commands.Cog):
 	@app_commands.command(description="Compliment someone!")
 	async def compliment(self, ctx, target:discord.Member):
 		await prettysend(ctx, "", random.choice(compliments) % target.mention)
-	
+
 	@app_commands.command(description="RPICDB will help you choose something!")
 	async def choose(self, ctx, choice1:str, choice2:str, choice3:str="", choice4:str="", choice5:str=""):
 		choices = [choice1,choice2,choice3,choice4,choice5]
@@ -151,7 +128,7 @@ class Fun(commands.Cog):
 			if choice == "":
 				choices.pop(choices.index(choice))
 		await prettysend(ctx, random.choice(choices))
-	
+
 	@app_commands.command(description="Roll the dice!")
 	async def dice(self, ctx):
 		await prettysend(ctx,

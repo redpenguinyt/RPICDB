@@ -1,11 +1,12 @@
 import discord, random, asyncpraw, os
 from discord.ext import commands
 from discord import app_commands
+from secret_manager import REDDIT_ID, REDDIT_SECRET, REDDIT_USER_AGENT
 
 reddit = asyncpraw.Reddit(
-    client_id=os.environ['reddit_id'],
-    client_secret=os.environ['reddit_secret'],
-    user_agent=os.environ['reddit_user_agent'],
+    client_id=REDDIT_ID,
+    client_secret=REDDIT_SECRET,
+    user_agent=REDDIT_USER_AGENT,
 )
 
 class Suggested(commands.GroupCog, name="suggested"):
@@ -13,7 +14,7 @@ class Suggested(commands.GroupCog, name="suggested"):
 
 	def __init__(self, bot):
 		self.bot = bot
-	
+
 	@app_commands.command(
         name="wheretohidetoxicwaste",
         description="Where to hide toxic waste")
@@ -25,7 +26,7 @@ class Suggested(commands.GroupCog, name="suggested"):
 			embed=discord.Embed(color=0xe74c3c,
 			title=f"Here: {where}")
 		)
-	
+
 	@app_commands.command(
         name="randomquestion",
         description="Get a random question")
@@ -36,7 +37,7 @@ class Suggested(commands.GroupCog, name="suggested"):
 		while question.over_18:
 			question = await subreddit.random()
 		await ctx.followup.send(f"> {question.title}")
-	
+
 	@app_commands.command(
         name="pickupline",
         description="Get a random pickup line")

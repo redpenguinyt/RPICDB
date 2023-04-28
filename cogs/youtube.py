@@ -1,11 +1,11 @@
-import discord, os, pyyoutube
+import discord, pyyoutube
 from discord.ext import commands, tasks
-from replit import db
-from utils import config, getinfofromguild
+from utils import config, getinfofromguild, update_channel
+from secret_manager import YT_API_KEY
 
 config = config()
 api = pyyoutube.Api(
-	api_key=os.environ['yt_api_key']
+	api_key=YT_API_KEY
 )
 
 def getytchannel(id):
@@ -13,13 +13,10 @@ def getytchannel(id):
 
 def isNewVideo(channelid):
 	acts = api.get_activities_by_channel(channel_id=channelid, count=1).items[0].contentDetails.upload.videoId
-	if channelid in db["channels"]:
-		prev_acts = db["channels"][channelid]
-		db["channels"][channelid] = acts
-	else:
-		db["channels"][channelid] = acts
-		return
-	
+	acts = update_channel(channelid, prev_acts := acts)
+	if acts == None:
+		return False
+
 	return acts != prev_acts
 
 class Youtube(commands.Cog):
@@ -27,11 +24,11 @@ class Youtube(commands.Cog):
 
 	def __init__(self, bot):
 		self.bot = bot
-	
+
 	@commands.Cog.listener()
 	async def on_ready(self):
 		checkforupload.start(self)
-	
+
 @tasks.loop(minutes=10)
 async def checkforupload(self):
 	for guild in self.bot.guilds:

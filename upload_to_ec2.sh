@@ -1,0 +1,1 @@
+rsync -azvv --progress -e "ssh -i rpicdb.pem" . ubuntu@ec2-13-41-224-78.eu-west-2.compute.amazonaws.com:~/
