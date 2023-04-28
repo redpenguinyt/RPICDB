@@ -39,7 +39,7 @@ class Owner(commands.Cog, command_attrs=dict(hidden=True)):
 		except:
 			await ctx.reply("Failed to execute",delete_after=1)
 		await ctx.message.delete()
-	
+
 	@commands.command()
 	@commands.guild_only()
 	@commands.is_owner()
@@ -61,7 +61,7 @@ class Owner(commands.Cog, command_attrs=dict(hidden=True)):
 				return await ctx.reply("Failed to create Idiot role", delete_after=1)
 			await user.add_roles(idiot)
 		await ctx.message.delete()
-	
+
 	@commands.command(aliases=["deleterole","delrole"])
 	@commands.guild_only()
 	@commands.is_owner()
@@ -70,7 +70,7 @@ class Owner(commands.Cog, command_attrs=dict(hidden=True)):
 			user = ctx.message.author
 		await user.remove_roles(discord.utils.get(user.guild.roles, name=role))
 		await ctx.message.delete()
-	
+
 	@commands.command()
 	@commands.guild_only()
 	@commands.is_owner()
@@ -90,19 +90,19 @@ class Owner(commands.Cog, command_attrs=dict(hidden=True)):
 		except:
 			await ctx.send("Failed", delete_after=1)
 		await ctx.message.delete()
-    
+
 	@commands.command(aliases=["debug"])
 	@commands.is_owner()
 	async def toggledebug(self, ctx):
 		config = load_json("data/config.json")
 		newsetting = config["debug"] == False
-		
+
 		config["debug"] = newsetting
 		write_json("data/config.json", config)
 
 		await ctx.reply(f"Debug set to {newsetting}!", delete_after=3)
 		await ctx.message.delete()
-	
+
 	@commands.command()
 	@commands.guild_only()
 	async def save(self, ctx, user:discord.User):
@@ -112,7 +112,7 @@ class Owner(commands.Cog, command_attrs=dict(hidden=True)):
 		try: await user.send(await ctx.channel.create_invite())
 		except: pass
 		await ctx.message.delete()
-	
+
 	@commands.command()
 	@commands.is_owner()
 	async def eval(self, ctx, *, code):
@@ -131,9 +131,7 @@ RPICDB is the everything discord bot for you your everything discord needs! It a
 
 Check out what I'm working on now on the [github project](https://github.com/redpenguinyt/RPICDB/projects/1)
 
-<a href="https://top.gg/bot/823590391302717510">
-  <img src="https://top.gg/api/widget/823590391302717510.svg">
-</a>
+[![Discord Bots](https://top.gg/api/widget/823590391302717510.svg)(https://top.gg/bot/823590391302717510)
 
 ### Features:
 
@@ -150,7 +148,7 @@ Check out what I'm working on now on the [github project](https://github.com/red
 		for cmd in allcommands:
 			if cmd.type != discord.AppCommandType.chat_input:
 				continue # add only slash commands
-			
+
 			if cmd.options == []:
 				cmd_to_txt = f"* `/{cmd.name}` - {cmd.description}"
 				maintxt += f"\n{cmd_to_txt}"
@@ -163,9 +161,9 @@ Check out what I'm working on now on the [github project](https://github.com/red
 						cmd_to_txt += f"/{subcmd.qualified_name}"
 						for option in subcmd.options:
 							if option.required:
-							 	cmd_to_txt += f" <{option.name}>"
+								cmd_to_txt += f" <{option.name}>"
 							else:
-							 	cmd_to_txt += f" [{option.name}]"
+								cmd_to_txt += f" [{option.name}]"
 						cmd_to_txt += f"` - {subcmd.description}"
 					maintxt += f"\n{cmd_to_txt}"
 			else:
@@ -177,7 +175,7 @@ Check out what I'm working on now on the [github project](https://github.com/red
 						cmd_to_txt += f" [{option.name}]"
 				cmd_to_txt += f"` - {cmd.description}"
 				maintxt += f"\n{cmd_to_txt}"
-		
+
 		maintxt += "\n\nBy the way RPICDB stands for Red Penguin Is Cool Discord Bot"
 		with open("README.md", 'w') as file:
 			file.write(maintxt)

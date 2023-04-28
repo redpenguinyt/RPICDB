@@ -1,4 +1,4 @@
-import discord, time, os
+import discord, os
 from utils import config
 from keep_alive import keep_alive
 from discord.ext import commands
@@ -17,7 +17,7 @@ class MyBot(commands.Bot):
 			owner_ids = config["owners"],
 			help_command = None,
 			intents = intents,
-			activity = discord.Game(name="the saxaphone"), 
+			activity = discord.Game(name="the saxaphone"),
 			application_id = 823590391302717510
 		)
 
@@ -32,10 +32,13 @@ class MyBot(commands.Bot):
 
 bot = MyBot()
 
+print("Starting...")
 keep_alive()
-while True:
-	try:
-		bot.run(os.environ['token'], reconnect=True)
-	except Exception as e:
-		print(f"Error when logging in: {str(e).split(': <!DOCT')[0]}")
-	time.sleep(3)
+try:
+	bot.run(os.environ['token'], reconnect=True)
+except discord.errors.HTTPException:
+	print("Too Many Requests - killing")
+	os.system("python restarter.py")
+	os.system("kill 1")
+except Exception as e:
+	print(f"Error when logging in: {str(e).split(': <!DOCT')[0]}")
