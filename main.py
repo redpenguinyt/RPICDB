@@ -36,8 +36,8 @@ print("Starting...")
 try:
 	bot.run(DISCORD_TOKEN, reconnect=True)
 except discord.errors.HTTPException:
-	print("Too Many Requests - killing")
-	os.system("python restarter.py")
-	os.system("kill 1")
+	print("Too Many Requests - shutting down")
+except KeyboardInterrupt:
+	print("Shutting down")
 except Exception as e:
 	print(f"Error when logging in: {str(e).split(': <!DOCT')[0]}")

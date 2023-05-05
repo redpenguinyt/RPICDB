@@ -5,7 +5,7 @@ from utils import config, traceback_maker, getinfofromguild, prettysend
 import discord
 
 class Events(commands.Cog):
-	def __init__(self, bot):
+	def __init__(self, bot: commands.Bot):
 		self.bot = bot
 		self.config = config()
 		bot.tree.on_error = self.on_app_command_error
@@ -26,14 +26,9 @@ Also send the error message below:
 		# Specifically to remove $help
 		if isinstance(err, errors.CommandNotFound):
 			return
-		
+
 		error = traceback_maker(err)
 		await ctx.send(f"There was an error processing the command ;-; \n{error}")
-
-	@commands.Cog.listener()
-	async def on_message(self, msg):
-		if f"<@!{self.bot.user.id}>" in msg.content:
-			await msg.channel.send(f"Hi!")
 
 	@commands.Cog.listener()
 	async def on_member_join(self, member: discord.Member):
